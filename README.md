@@ -1,6 +1,4 @@
 # 2V
-----------
-**********
 
 **APP WEB** desenvolvido na disciplina **Projeto 3**
 
