@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../src/config/app');
+var app = require('../src/config/app.js');
 var debug = require('debug')('node-em:server');
 var http = require('http');
 
@@ -25,10 +25,11 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+app.listen(port, () => {
+  console.log('App rodando na porta ' + port);  
+});
 server.on('error', onError);
 server.on('listening', onListening);
-console.log("App rodando na porta - " + port);
 
 /**
  * Normalize a port into a number, string, or false.

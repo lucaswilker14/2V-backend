@@ -4,8 +4,7 @@
   "description": "**APP WEB** desenvolvido na disciplina **Projeto 3**",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./bin/server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./bin/server.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +22,8 @@
     "express": "^4.16.3",
     "http": "0.0.0",
     "mongoose": "^5.2.14"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.4"
   }
 }
