@@ -15,6 +15,7 @@ const route = router.get('/', (req, res) => {
     })
 });
 
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
