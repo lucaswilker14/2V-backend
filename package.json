@@ -1,0 +1,26 @@
+{
+  "name": "2V-backend",
+  "version": "1.0.0",
+  "description": "**APP WEB** desenvolvido na disciplina **Projeto 3**",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon ./bin/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucaswilker14/2V-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucaswilker14/2V-backend/issues"
+  },
+  "homepage": "https://github.com/lucaswilker14/2V-backend#readme",
+  "dependencies": {
+    "debug": "^4.0.1",
+    "express": "^4.16.3",
+    "http": "0.0.0"
+  }
+}
