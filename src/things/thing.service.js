@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 const Thing = mongoose.model('Thing');
 
-exports.post = async (thing, callback) => {
+exports.post = async (thing) => {
     var thing = new Thing(thing);
-    await thing.save().then(() => {
-        callback(thing);
-    }).catch((err) => {
-        callback(err);
-    });;
+    var res = await thing.save();
+    return res;
 }
 
 exports.get = async (callback) => {
