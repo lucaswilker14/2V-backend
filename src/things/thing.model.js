@@ -11,37 +11,40 @@ const Thing = new schema({
     color: {
         type: String,
         trim: true,
-        default: ''
+        default: 'Cor não informada'
     },
 
     brand: {
         type: String,
         trim: true,
-        default: ''
-    },
-
-    obs: {
-        type: String,
-        trim: true,
-        default: ''
+        default: 'Marca não informada'
     },
 
     image: {        
         type: String,
-        default: ''
+        default: 'Imagem não informada'
     },
 
     loan_date: {
         type: Date,
-        required: [true, 'Data de emprestimo é obrigatória']
+        // required: [true, 'Data de emprestimo é obrigatória'],
+        default: Date.now
 
     },
 
     return_date: {
         type: Date,
-        required: [true, 'Data de emprestimo é obrigatória']
+        // required: [true, 'Data de emprestimo é obrigatória'],
+        default: Date.now
     },
 
+    obs: {
+        type: String,
+        trim: true,
+        default: 'Observações não informada'
+    },
+
+    // informações do usuario.
     user_adress: {
             name: {
                 type: String,
@@ -49,7 +52,8 @@ const Thing = new schema({
             },
 
             email: {
-                type: String
+                type: String,
+                default: 'Email não informado'
             },
 
             phone: {
@@ -59,14 +63,12 @@ const Thing = new schema({
             
             street: {
                 type: String,
-                required: [true, 'Rua é obrigatório'],
                 trim: true,
                 default: 'Rua não informada'
             },
             
             number: {
                 type: String,
-                required: [true, 'Número da casa é obrigatório'],
                 trim: true,
                 default: 'Número não informada'
             },
@@ -98,3 +100,5 @@ const Thing = new schema({
             },
     }
 });
+
+module.exports = mongoose.model('Thing', Thing);

@@ -33,7 +33,7 @@ const user = new schema({
         trim: true
     },
 
-    telephone: {
+    phone: {
         type: String,
         required: [true, 'Telefone é obrigatório'],
         trim: true

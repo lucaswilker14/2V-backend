@@ -3,7 +3,8 @@ const app = express();
 const mongoose = require('../config/mongoose')();
 
 //carregar os modelos
-const product = require('../user/user.model');
+const user = require('../user/user.model');
+const thing = require('../things/thing.model');
 
 //carregando rotas
 const indexRoute = require('../routes/router');
