@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+const response = require('../util/responses');
 const User = mongoose.model('User');
 const thingService = require('../things/thing.service');
 
@@ -6,30 +7,29 @@ const thingService = require('../things/thing.service');
 exports.post = async (user, callback) => {
     var user = new User(user); //criando um usuario
     await user.save().then((result) => {
-        callback('Usuário Cadastrado!')
+        callback(response.created('Usuário Criado com Sucesso!', result));
     }).catch((err) => {
-        callback(err);
+        callback(response.badRequest('Parametro Inválido'));
     });
 }
 
 //busca
 exports.getById = async (id, callback) => {
     await User.findById({_id: id}).then((result) => {
-        callback(result);
+        callback(response.ok('Busca concluída com Sucesso', result));
     }).catch((err) => {
-        callback("Usuário não encontrado!");
+        callback(response.notFound('Usuário não encontrado'));
     });;
     
 }
-
 
 //adicionando na lista do usuario um item que foi emprestado
 exports.addItem = async (userId, itemId, callback) => {
     await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $push: {borrewed: [itemId] }})
     .then((result) => {
-        callback('Item Adicionado! (Emprestado)');
+        callback(response.ok('Item Adicionado! (Emprestado)', result));
     }).catch((err) => {
-        callback(err);
+        callback(response.badRequest('Não foi possível Adicionar Item'));
     });
 };
 
@@ -37,9 +37,9 @@ exports.addItem = async (userId, itemId, callback) => {
 exports.returnedItem = async (userId, itemId, callback) => {
     await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $pull: {borrewed: mongoose.Types.ObjectId(itemId) }})
     .then(() => {
-        callback("Item Devolvido!");    
+        callback(response.ok("Item Devolvido!", ''));    
     }).catch((err) => {
-        callback(err);
+        callback(response.badRequest('Não foi possivel remover o item'));
     });
     await thingService.removeItem(itemId);
 };
@@ -52,8 +52,8 @@ exports.getItemByUser = async (userId, callback) => {
     .populate('borrewed');
     
     if (borrewed.borrewed) {
-        callback(borrewed.borrewed)
+        callback(response.ok('Busca concluida', borrewed.borrewed));
     } else {
-        callback("Usuário não Existe!");
+        callback(response.notFound("Usuário não Existe!"));
     }
 };

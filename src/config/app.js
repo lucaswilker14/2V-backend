@@ -9,11 +9,17 @@ const thing = require('../things/thing.model');
 //carregando rotas
 const indexRoute = require('../routes/router');
 
+
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 //usando rotas
 app.use('/', indexRoute);
-// app.use('/', create);
+
+app.use(function (req, res, next) {
+    res.header('Content-Type', 'application/json');
+    next();  // sem o next, a chamada para aqui
+});
+
 
 module.exports = app;
