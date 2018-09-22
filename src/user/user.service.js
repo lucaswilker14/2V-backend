@@ -9,7 +9,7 @@ exports.post = async (user, callback) => {
     await user.save().then((result) => {
         callback(response.created('Usuário Criado com Sucesso!', result));
     }).catch((err) => {
-        callback(response.badRequest('Parametro Inválido'));
+        callback(response.badRequest(err.message));
     });
 }
 
@@ -18,7 +18,7 @@ exports.getById = async (id, callback) => {
     await User.findById({_id: id}).then((result) => {
         callback(response.ok('Busca concluída com Sucesso', result));
     }).catch((err) => {
-        callback(response.notFound('Usuário não encontrado'));
+        callback(response.notFound('Usuário não existe!'));
     });;
     
 }
@@ -26,13 +26,17 @@ exports.getById = async (id, callback) => {
 //pegando os item de cada usuario
 exports.getItemByUser = async (userId, callback) => {
 
-    let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId)})
-    .select('borrewed')
-    .populate('borrewed');
+    try {
+        let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId)})
+        .select('borrewed')
+        .populate('borrewed');
     
-    if (borrewed.borrewed) {
-        callback(response.ok('Busca concluida', borrewed.borrewed));
-    } else {
+        if (borrewed.borrewed.length > 0) {
+            callback(response.ok('Busca concluida', borrewed.borrewed));
+        } else {
+            callback(response.notFound("Nenhum Item Encontrado!"));
+        }
+    } catch (error) {
         callback(response.notFound("Usuário não Existe!"));
     }
 };
@@ -40,7 +44,7 @@ exports.getItemByUser = async (userId, callback) => {
 //adicionando na lista do usuario um item que foi emprestado
 exports.addItemInBorrewed = async (userId, itemId, callback) => {
     //encontra e atualiza
-    await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $push: {borrewed: [itemId] }})
+    await User.findByIdAndUpdate(userId, { $push: {borrewed: [itemId] }})
     .then((result) => {
         callback(response.ok('Item Adicionado! (Lista de Emprestados)', result));
     }).catch((err) => {
@@ -64,7 +68,7 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
     .then(() => {
         callback(response.ok("Item Removido da Lista de Emprestados!", ''));    
     }).catch((err) => {
-        callback(response.badRequest('Não foi possivel remover o item'));
+        callback(response.badRequest('Não foi possivel remover o item. Usuário não encontrado!'));
     });
     // await thingService.removeItem(itemId);
 };
@@ -72,8 +76,8 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
 exports.removeItemInReturned = async (userId, itemId, callback) => {
     await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $pull: {returned: mongoose.Types.ObjectId(itemId) }})
-    .then(() => {
-        callback(response.ok("Item Removido da Lista de Devolvidos!", ''));    
+    .then((result) => {
+        callback(response.ok("Item Removido da Lista de Devolvidos!", result));    
     }).catch((err) => {
         callback(response.badRequest('Não foi possivel remover o item'));
     });

@@ -10,7 +10,7 @@ exports.post = ('/', async (req, res) => {
             res.status(response.status).send(response);
         });
     } catch (error) {
-        res.send(response.status);
+        res.send(error);
     }
 });
 
@@ -48,7 +48,8 @@ exports.addItem = ('/:id/add-item', async(req, res) => {
         });
 
     } catch (error) {
-        res.status(response.status).send(error);
+        console.log('DEU RUIM');
+        res.status(response.status).send(error.message);
     }
 });
 
@@ -72,15 +73,20 @@ exports.returnedItem = ('/:itemId', async(req, res) => {
         });
         
     } catch (error) {
-        console.log(error);
+        res.send("Objeto Não encontrado!");
     }
      
 });
 
 //item removido da lista de devolvidos e do bd
 exports.removeItem = ('/:userId/remove-item/:itemId', async(req, res) => {
-    await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
-        res.status(response.status).send(response);
-    });
+    try {
+
+        await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
+            res.status(response.status).send(response);
+        });
+    } catch (error) {
+        res.send(error);
+    }
 });
 
