@@ -73,15 +73,20 @@ exports.returnedItem = ('/:itemId', async(req, res) => {
         });
         
     } catch (error) {
-        console.log(error);
+        res.send("Objeto Não encontrado!");
     }
      
 });
 
 //item removido da lista de devolvidos e do bd
 exports.removeItem = ('/:userId/remove-item/:itemId', async(req, res) => {
-    await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
-        res.status(response.status).send(response);
-    });
+    try {
+
+        await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
+            res.status(response.status).send(response);
+        });
+    } catch (error) {
+        res.send(error);
+    }
 });
 
