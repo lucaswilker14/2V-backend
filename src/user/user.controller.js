@@ -10,7 +10,7 @@ exports.post = ('/', async (req, res) => {
             res.status(response.status).send(response);
         });
     } catch (error) {
-        res.send(response.status);
+        res.send(error);
     }
 });
 

@@ -9,7 +9,7 @@ exports.post = async (user, callback) => {
     await user.save().then((result) => {
         callback(response.created('Usuário Criado com Sucesso!', result));
     }).catch((err) => {
-        callback(response.badRequest('Parametro Inválido'));
+        callback(response.badRequest(err.message));
     });
 }
 
