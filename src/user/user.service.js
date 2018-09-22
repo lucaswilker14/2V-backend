@@ -26,13 +26,17 @@ exports.getById = async (id, callback) => {
 //pegando os item de cada usuario
 exports.getItemByUser = async (userId, callback) => {
 
-    let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId)})
-    .select('borrewed')
-    .populate('borrewed');
+    try {
+        let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId)})
+        .select('borrewed')
+        .populate('borrewed');
     
-    if (borrewed.borrewed) {
-        callback(response.ok('Busca concluida', borrewed.borrewed));
-    } else {
+        if (borrewed.borrewed.length > 0) {
+            callback(response.ok('Busca concluida', borrewed.borrewed));
+        } else {
+            callback(response.notFound("Nenhum Item Encontrado!"));
+        }
+    } catch (error) {
         callback(response.notFound("Usuário não Existe!"));
     }
 };
