@@ -44,7 +44,7 @@ exports.getItemByUser = async (userId, callback) => {
 //adicionando na lista do usuario um item que foi emprestado
 exports.addItemInBorrewed = async (userId, itemId, callback) => {
     //encontra e atualiza
-    await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $push: {borrewed: [itemId] }})
+    await User.findByIdAndUpdate(userId, { $push: {borrewed: [itemId] }})
     .then((result) => {
         callback(response.ok('Item Adicionado! (Lista de Emprestados)', result));
     }).catch((err) => {

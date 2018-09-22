@@ -48,7 +48,8 @@ exports.addItem = ('/:id/add-item', async(req, res) => {
         });
 
     } catch (error) {
-        res.status(response.status).send(error);
+        console.log('DEU RUIM');
+        res.status(response.status).send(error.message);
     }
 });
 
