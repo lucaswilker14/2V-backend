@@ -25,3 +25,4 @@
 /.nb-gradle/
 node_modules/
 bower_components/
+\.vscode/settings\.json
