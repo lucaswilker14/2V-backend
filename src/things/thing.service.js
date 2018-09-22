@@ -16,7 +16,7 @@ exports.get = async (callback) => {
 }
 
 exports.getItemById = async (id, callback) => {
-    Thing.findById({_id: id}, 'user_adress name loan_date return_date').then((result) => {
+    Thing.findById({_id: id}).then((result) => {
         callback(result);
     }).catch((err) => {
         callback(err);

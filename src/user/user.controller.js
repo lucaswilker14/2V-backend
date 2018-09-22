@@ -25,29 +25,8 @@ exports.getById = ('/:id', async (req, res) => {
     }
 });
 
-
-//empresta um item
-exports.addItem = ('/:id/add-item', async(req, res) => {
-    try {
-        var newThing = await thingService.post(req.body);
-        console.log(newThing);
-        userService.addItem(req.params.id, newThing._id, (response) => {
-            res.status(response.status).send(response);
-        });
-    } catch (error) {
-        res.status(response.status).send(error);
-    }
-});
-
-//o item foi devolvido (Devolucao - retornado)
-exports.returnedItem = ('/:userId/remove-item/:itemId', async(req, res) => {
-    await userService.returnedItem(req.params.userId, req.params.itemId, (response) => {
-        res.status(response.status).send(response);
-    });
-});
-
 //busca os itens emprestado pelo usuarios
-exports.getItem = ('/:userId/itens', async (req, res) => {
+exports.getItens = ('/:userId/itens', async (req, res) => {
     try {
         await userService.getItemByUser(req.params.userId, (response) => {
             res.status(response.status).send(response);
@@ -56,3 +35,52 @@ exports.getItem = ('/:userId/itens', async (req, res) => {
         res.status(response.status);
     }
 });
+
+//empresta um item
+exports.addItem = ('/:id/add-item', async(req, res) => {
+    try {
+        //cria o item
+        var newThing = await thingService.post(req.body);
+        
+        //adiciona na lista de emprestados (returned)
+        userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
+            res.status(response.status).send(response);
+        });
+
+    } catch (error) {
+        res.status(response.status).send(error);
+    }
+});
+
+//o item foi devolvido (Devolucao - retornado)
+exports.returnedItem = ('/:itemId', async(req, res) => {
+    try {
+        
+        //busco o item pelo id
+        await thingService.getItemById(req.params.itemId, async (response) => {
+            
+            // //remove dos emprestados (borrewed)
+            await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
+                    console.log(response);
+            });
+
+            //adicionar na lista de devolvidos (returned)
+            await userService.addItemInReturned(req.params.userId, response._id, (response) => {
+                    res.status(200).send(response)
+            });
+
+        });
+        
+    } catch (error) {
+        console.log(error);
+    }
+     
+});
+
+//item removido da lista de devolvidos e do bd
+exports.removeItem = ('/:userId/remove-item/:itemId', async(req, res) => {
+    await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
+        res.status(response.status).send(response);
+    });
+});
+
