@@ -15,7 +15,7 @@ exports.post = ('/', async (req, res) => {
 });
 
 //busca pelo id
-exports.getById = ('/:id', async (req, res) => {
+exports.getById = ('/', async (req, res) => {
     try {
         await userService.getById(req.params.id, (response) => {
             res.status(response.status).send(response);
@@ -26,7 +26,7 @@ exports.getById = ('/:id', async (req, res) => {
 });
 
 //busca os itens emprestado pelo usuarios
-exports.getItens = ('/:userId/itens', async (req, res) => {
+exports.getItens = ('/itens', async (req, res) => {
     try {
         await userService.getItemByUser(req.params.userId, (response) => {
             res.status(response.status).send(response);
@@ -37,7 +37,7 @@ exports.getItens = ('/:userId/itens', async (req, res) => {
 });
 
 //empresta um item
-exports.addItem = ('/:id/add-item', async(req, res) => {
+exports.addItem = ('/add-item', async(req, res) => {
     try {
         //cria o item
         var newThing = await thingService.post(req.body);
@@ -54,7 +54,7 @@ exports.addItem = ('/:id/add-item', async(req, res) => {
 });
 
 //o item foi devolvido (Devolucao - retornado)
-exports.returnedItem = ('/:itemId', async(req, res) => {
+exports.returnedItem = ('/devolucao', async(req, res) => {
     try {
         
         //busco o item pelo id
@@ -79,7 +79,7 @@ exports.returnedItem = ('/:itemId', async(req, res) => {
 });
 
 //item removido da lista de devolvidos e do bd
-exports.removeItem = ('/:userId/remove-item/:itemId', async(req, res) => {
+exports.removeItem = ('/removeItem', async(req, res) => {
     try {
 
         await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {

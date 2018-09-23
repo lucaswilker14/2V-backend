@@ -75,11 +75,13 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
 
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
 exports.removeItemInReturned = async (userId, itemId, callback) => {
+    
     await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $pull: {returned: mongoose.Types.ObjectId(itemId) }})
     .then((result) => {
         callback(response.ok("Item Removido da Lista de Devolvidos!", result));    
     }).catch((err) => {
         callback(response.badRequest('Não foi possivel remover o item'));
     });
+    //remove item
     await thingService.removeItem(itemId);
 };

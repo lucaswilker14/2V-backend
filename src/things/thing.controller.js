@@ -12,7 +12,7 @@ exports.get = ('/', async (req, res) => {
     });
 });
 
-exports.getItemById = ('/:id', async (req, res) => {
+exports.getItemById = ('/', async (req, res) => {
     await thingService.getItemById(req.params.id, (response) => {
         res.status(200).send(response);
     });

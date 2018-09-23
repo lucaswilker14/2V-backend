@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 //usando rotas
-app.use('/', indexRoute);
+app.use('/api/2V', indexRoute);
 
 app.use(function (req, res, next) {
     res.header('Content-Type', 'application/json');

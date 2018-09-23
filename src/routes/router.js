@@ -8,13 +8,13 @@ router.post('/user', userController.post);
 
 router.get('/user/:id', userController.getById);
 
-router.get('/:userId/itens', userController.getItens);
+router.get('/user/:userId/itens', userController.getItens);
 
-router.post('/user/:id/add-item', userController.addItem);
+router.post('/user/:id', userController.addItem);
 
-router.put('/user/:userId/item/:itemId/devolve', userController.returnedItem);
+router.put('/user/:userId/item/:itemId', userController.returnedItem);
 
-router.delete('/user/:userId/remove-item/:itemId', userController.removeItem);
+router.delete('/user/:userId/item/:itemId', userController.removeItem);
 
 //rotas de things
 router.post('/thing', thingController.post);
