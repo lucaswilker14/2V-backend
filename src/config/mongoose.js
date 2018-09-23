@@ -1,7 +1,8 @@
 let mongoose = require("mongoose");
+const config = require('./config');
 
 module.exports = function () {
-    mongoose.connect("mongodb://localhost:27017/2vdb");
+    mongoose.connect(config.connectionDB);
     mongoose.Promise = global.Promise;
 
     let db = mongoose.connection;
