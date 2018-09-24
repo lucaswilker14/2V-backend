@@ -12,7 +12,7 @@ module.exports = () => {
     var today = new Date(Date.now());
     today = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
 
-    schedule.scheduleJob('59 * * * * *', () => {
+    schedule.scheduleJob({hour: 18, minute: 55}, () => {
         
         thingService.get((response) => {
             

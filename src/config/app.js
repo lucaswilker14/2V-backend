@@ -9,7 +9,7 @@ const thing = require('../things/thing.model');
 //carregando rotas
 const indexRoute = require('../routes/router');
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
