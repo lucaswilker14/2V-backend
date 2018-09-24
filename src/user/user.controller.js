@@ -1,8 +1,9 @@
 const userService = require('../user/user.service');
 const thingService = require('../things/thing.service');
 const mongoose = require("mongoose");
-const emailService = require('../util/emailsender');
+const emailService = require('../util/emailSender');
 const User = mongoose.model('User');
+const schedule = require('../util/schedule')();
 
 //salva usuario
 exports.post = ('/', async (req, res) => {
@@ -41,7 +42,7 @@ exports.getItens = ('/itens', async (req, res) => {
 exports.addItem = ('/add-item', async(req, res) => {
     try {
         //cria o item
-        var newThing = await thingService.post(req.body);
+        var newThing = await thingService.post(req.body, req.params.id);
         
         //adiciona na lista de emprestados (returned)
         userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
@@ -50,7 +51,7 @@ exports.addItem = ('/add-item', async(req, res) => {
 
     } catch (error) {
         console.log('DEU RUIM');
-        res.status(response.status).send(error.message);
+        res.send(error.message);
     }
 });
 
@@ -60,15 +61,6 @@ exports.returnedItem = ('/devolucao', async(req, res) => {
         
         //busco o item pelo id
         await thingService.getItemById(req.params.itemId, async (response) => {
-
-            var mailOptions = {
-                from: "2Vservice@email.com",
-                to: response.user_adress.email,
-                subject: "Solicitação de Devolução",
-                text: "Caro "+ response.user_adress.name + ", Thaynara solicita seu item de volta! \n\ SDHASD"
-            }
-
-            emailService.send(mailOptions);
 
             // //remove dos emprestados (borrewed)
             await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
@@ -99,4 +91,31 @@ exports.removeItem = ('/removeItem', async(req, res) => {
         res.send(error);
     }
 });
+
+exports.solicitedItem = ('/solicitarItem', async(req, res) => {
+
+    await thingService.getItemById(req.params.itemId, async (response) => {
+
+        //nome do proprietario do item
+        var owner_name = await User.findById(req.params.userId, 'firstName secondName');
+        owner_name = owner_name.firstName + " " + owner_name.secondName;
+        //para quem vai enviar
+        var to = response.user_adress.email;
+        //nome do recebedor do email
+        var receiver = response.user_adress.name;
+        //data de devolucao
+        var returned_date = response.return_date.getDate() + "/" + response.return_date.getMonth() + "/" + response.return_date.getFullYear();
+        //descricao do item
+        var describe_item = response.name
+        
+        await sendEmail(to, receiver, returned_date, describe_item, owner_name);
+        
+        res.send('Email enviado!');
+    });
+});
+
+const sendEmail = (to, receiver, returned_date, describe_item, owner_name) => {
+    var mailOptions = userService.createMailOptions(to, receiver, returned_date, describe_item, owner_name);
+    return emailService.send(mailOptions);
+};
 

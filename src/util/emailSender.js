@@ -5,7 +5,6 @@ sendgrid.setApiKey(config.sendGridKey);
 
 
 exports.send = async (mailOptions) => {
-    console.log(mailOptions);
     sendgrid.send({
         from: mailOptions.from,
         to: mailOptions.to,

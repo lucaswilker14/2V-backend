@@ -10,6 +10,10 @@ const validatePhone = (phone) => {
     return new RegExp(/^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/).test(phone);
 }
 
+const validadeDate = (date) => {
+    return new RegExp(date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear());
+}
+
 const Thing = new schema({
 
     name: {
@@ -37,21 +41,28 @@ const Thing = new schema({
 
     loan_date: {
         type: Date,
-        // required: [true, 'Data de emprestimo é obrigatória'],
-        default: Date.now
+        validate: [validadeDate, 'Data Inválida'],
+        required: [true, 'Data de emprestimo é obrigatória']
+        // default: Date.now
 
     },
 
     return_date: {
         type: Date,
-        // required: [true, 'Data de emprestimo é obrigatória'],
-        default: Date.now
+        validate: [validadeDate, 'Data Inválida'],
+        required: [true, 'Data de emprestimo é obrigatória']
+        // default: Date.now
     },
 
     obs: {
         type: String,
         trim: true,
         default: 'Observações não informada'
+    },
+
+    owner: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
 
     // informações do usuario.

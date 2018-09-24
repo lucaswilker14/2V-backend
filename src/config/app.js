@@ -9,6 +9,7 @@ const thing = require('../things/thing.model');
 //carregando rotas
 const indexRoute = require('../routes/router');
 
+app.use(morgan("dev"));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -20,6 +21,5 @@ app.use(function (req, res, next) {
     res.header('Content-Type', 'application/json');
     next();  // sem o next, a chamada para aqui
 });
-
 
 module.exports = app;

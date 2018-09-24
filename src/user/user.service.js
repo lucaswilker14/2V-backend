@@ -13,7 +13,15 @@ exports.post = async (user, callback) => {
     });
 }
 
-//busca
+exports.getFindAll = async (callback) => {
+    await User.find({}).then((result) => {
+        callback(result);
+    }).catch((err) => {
+        callback(response.notFound(err));
+    });
+}
+
+//busca por id
 exports.getById = async (id, callback) => {
     await User.findById({_id: id}).then((result) => {
         callback(response.ok('Busca concluída com Sucesso', result));
@@ -84,4 +92,29 @@ exports.removeItemInReturned = async (userId, itemId, callback) => {
     });
     //remove item
     await thingService.removeItem(itemId);
+};
+
+exports.createMailOptions = (to, receiver, returned_date, describeItem, ownerName) => {
+
+    let mailOptions = {
+        from: "2VService@email.com",
+        subject: "Solicitação de Devolução"
+    }
+
+    //para quem enviar
+    mailOptions['to'] = to;
+    mailOptions['receiver'] = receiver;
+    mailOptions['returned_date'] = returned_date; 
+
+    //descricao do item
+    mailOptions['describeItem'] = describeItem;
+
+    mailOptions['solicitor'] = ownerName;
+
+    //corpo do email
+    mailOptions.text = "Caro, " + mailOptions.receiver  + "\n\n\n" + mailOptions.solicitor + " solicita o item emprestado de volta!" + "\n\n" 
+                        + "Descrição: " + "\n" + " - " + mailOptions.describeItem + " - Data de emprestimo: " + mailOptions.returned_date;
+
+    return mailOptions;
+
 };
