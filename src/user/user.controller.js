@@ -1,6 +1,7 @@
 const userService = require('../user/user.service');
 const thingService = require('../things/thing.service');
 const mongoose = require("mongoose");
+const emailService = require('../util/emailsender');
 const User = mongoose.model('User');
 
 //salva usuario
@@ -59,7 +60,16 @@ exports.returnedItem = ('/devolucao', async(req, res) => {
         
         //busco o item pelo id
         await thingService.getItemById(req.params.itemId, async (response) => {
-            
+
+            var mailOptions = {
+                from: "2Vservice@email.com",
+                to: response.user_adress.email,
+                subject: "Solicitação de Devolução",
+                text: "Caro "+ response.user_adress.name + ", Thaynara solicita seu item de volta! \n\ SDHASD"
+            }
+
+            emailService.send(mailOptions);
+
             // //remove dos emprestados (borrewed)
             await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
                     console.log(response);
