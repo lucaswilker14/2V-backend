@@ -31,7 +31,8 @@ module.exports = () => {
 
                 if (return_date === today) {
                     var mailOptions = userService.createMailOptions(to, receiver, return_date, describeItem, owner_name);
-                    emailService.send(mailOptions)
+                    emailService.send(mailOptions);
+                    console.log('Emails enviados!');
                 }
             });
         });

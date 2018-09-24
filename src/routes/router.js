@@ -3,6 +3,7 @@ var router = express.Router();
 const userController = require('../user/user.controller');
 const thingController = require('../things/thing.controller');
 
+
 //rotas de usuarios
 router.post('/user', userController.post);
 
