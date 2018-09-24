@@ -14,6 +14,8 @@ router.post('/user/:id', userController.addItem);
 
 router.put('/user/:userId/item/:itemId', userController.returnedItem);
 
+router.get('/user/:userId/item/:itemId', userController.solicitedItem);
+
 router.delete('/user/:userId/item/:itemId', userController.removeItem);
 
 //rotas de things
