@@ -1,11 +1,21 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
+const validateEmail = (email) => {
+    var x = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+    return x.test(email);
+}
+
+const validatePhone = (phone) => {
+    return new RegExp(/^(?:(?:\+|00)?(55)\s?)?(?:\(?([1-9][0-9])\)?\s?)?(?:((?:9\d|[2-9])\d{3})\-?(\d{4}))$/).test(phone);
+}
+
 const Thing = new schema({
 
     name: {
         type: String,
-        required: [true, 'Nome do Objeto é obrigatório']
+        required: [true, 'Nome do Objeto é obrigatório'],
+        trim: true
     },
 
     color: {
@@ -48,17 +58,22 @@ const Thing = new schema({
     user_adress: {
             name: {
                 type: String,
+                trim: true,
                 required: [true, 'Nome é Obrigatório']
             },
 
             email: {
                 type: String,
-                default: 'Email não informado'
+                default: 'Email não informado',
+                validate: [validateEmail, 'E-mail invalido!'],
+                trim: true
             },
 
             phone: {
                 type: String,
-                required: [true, 'Telefone é Obrigatório']
+                required: [true, 'Telefone é Obrigatório'],
+                trim: true,
+                validate: [validatePhone, 'Telefone Inválido']
             },
             
             street: {
