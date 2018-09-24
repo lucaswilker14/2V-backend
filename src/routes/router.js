@@ -14,7 +14,7 @@ router.post('/user/:id', userController.addItem);
 
 router.put('/user/:userId/item/:itemId', userController.returnedItem);
 
-router.get('/user/:userId/item/:itemId', userController.solicitedItem);
+router.get('/user/:userId/item/:itemId', userController.solicitedItem); //quando clicar no botão C -FRONT
 
 router.delete('/user/:userId/item/:itemId', userController.removeItem);
 

@@ -1,14 +1,16 @@
 const mongoose = require("mongoose");
 const Thing = mongoose.model('Thing');
 
-exports.post = async (thing) => {
+exports.post = async (thing, owner) => {
     var thing = new Thing(thing);
     var res = await thing.save();
+    await Thing.findByIdAndUpdate(thing._id, { $set: {owner: owner}});
     return res;
+
 }
 
 exports.get = async (callback) => {
-    Thing.find({}, 'user_adress name loan_date return_date ').then((result) => {
+    Thing.find({}, 'user_adress name loan_date return_date owner').then((result) => {
         callback(result);
     }).catch((err) => {
         callback(err);

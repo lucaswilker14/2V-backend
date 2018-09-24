@@ -21,5 +21,4 @@ app.use(function (req, res, next) {
     next();  // sem o next, a chamada para aqui
 });
 
-
 module.exports = app;
