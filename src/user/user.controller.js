@@ -1,9 +1,10 @@
+const config = require('../config/config');
 const userService = require('../user/user.service');
 const thingService = require('../things/thing.service');
 const mongoose = require("mongoose");
 const emailService = require('../util/emailSender');
 const User = mongoose.model('User');
-const schedule = require('../util/schedule')();
+const schedule = require('../util/schedule')(config.systemHour.hour, config.systemHour.minute);
 
 //salva usuario
 exports.post = ('/', async (req, res) => {
@@ -104,18 +105,18 @@ exports.solicitedItem = ('/solicitarItem', async(req, res) => {
         //nome do recebedor do email
         var receiver = response.user_adress.name;
         //data de devolucao
-        var returned_date = response.return_date.getDate() + "/" + response.return_date.getMonth() + "/" + response.return_date.getFullYear();
+        var loan_date = response.loan_date.getDate() + "/" + response.loan_date.getMonth() + "/" + response.loan_date.getFullYear();
         //descricao do item
         var describe_item = response.name
         
-        await sendEmail(to, receiver, returned_date, describe_item, owner_name);
+        await sendEmail(to, receiver, loan_date, describe_item, owner_name);
         
         res.send('Email enviado!');
     });
 });
 
-const sendEmail = (to, receiver, returned_date, describe_item, owner_name) => {
-    var mailOptions = userService.createMailOptions(to, receiver, returned_date, describe_item, owner_name);
+const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {
+    var mailOptions = userService.createMailOptions(to, receiver, loan_date, describe_item, owner_name);
     return emailService.send(mailOptions);
 };
 
