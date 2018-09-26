@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 const response = require('../util/responses');
 const User = mongoose.model('User');
 const thingService = require('../things/thing.service');
+const schedule = require('node-schedule');
+
 
 //save
 exports.post = async (user, callback) => {
@@ -117,4 +119,11 @@ exports.createMailOptions = (to, receiver, loan_date, describeItem, ownerName) =
 
     return mailOptions;
 
+};
+
+exports.createRule = (hour, minute) => {
+    var rule =  new schedule.RecurrenceRule();
+    rule.hour = hour;
+    rule.minute = minute;
+    return rule;
 };

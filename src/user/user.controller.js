@@ -4,7 +4,6 @@ const thingService = require('../things/thing.service');
 const mongoose = require("mongoose");
 const emailService = require('../util/emailSender');
 const User = mongoose.model('User');
-const schedule = require('node-schedule');
 const scheduleService = require('../util/schedule')(config.systemHour.hour, config.systemHour.minute);
 
 //salva usuario
@@ -121,9 +120,8 @@ exports.solicitedItem = ('/solicitarItem', async(req, res) => {
 
 //mudar o horario do envio de emails
 exports.setSystemDate = ('/change-date', (req, res) => {
-    var rule =  new schedule.RecurrenceRule();
-    rule.hour = req.body.hour;
-    rule.minute = req.body.minute;
+    var rule = userService.createRule(req.body.hour, req.body.minute);
+    console.log(rule);
     var x = scheduleService.reschedule(rule);
     if (x) res.status(200).send('Horário do envio de emails de devolução alterado para as: ' + req.body.hour + ":" + req.body.minute);
     else res.status(200).send('error');
