@@ -15,7 +15,7 @@ exports.post = async (user, callback) => {
 
 exports.getFindAll = async (callback) => {
     await User.find({}).then((result) => {
-        callback(result);
+        callback(response.ok('Busca concluida', result));
     }).catch((err) => {
         callback(response.notFound(err));
     });

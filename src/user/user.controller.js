@@ -116,6 +116,7 @@ exports.solicitedItem = ('/solicitarItem', async(req, res) => {
     });
 });
 
+
 //funcoes do admin
 
 //mudar o horario do envio de emails
@@ -126,6 +127,11 @@ exports.setSystemDate = ('/change-date', (req, res) => {
     var x = scheduleService.reschedule(rule);
     if (x) res.status(200).send('Horário do envio de emails de devolução alterado para as: ' + req.body.hour + ":" + req.body.minute);
     else res.status(200).send('error');
+});
+exports.getAllUser = ('/getUsers', async (req, res) => {
+    await userService.getFindAll((response) => {
+        res.send(response);
+    });
 });
 
 
