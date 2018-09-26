@@ -19,6 +19,8 @@ router.get('/user/:userId/item/:itemId', userController.solicitedItem); //quando
 
 router.delete('/user/:userId/item/:itemId', userController.removeItem);
 
+router.post('/admin', userController.setSystemDate);
+
 //rotas de things
 router.post('/thing', thingController.post);
 router.get('/user/:id/thing/:id', thingController.getItemById);

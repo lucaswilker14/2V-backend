@@ -1,8 +1,8 @@
 global.SALT_KEY = '9a1b3589-0084-46c3-a211-bf863ceaa7a7'
 
 var systemHour  = {
-    "hour": 13,
-    "minute": 22
+    "hour": 00,
+    "minute": 00
 }
 
 module.exports = {

@@ -10,9 +10,10 @@ const User = mongoose.model('User');
 module.exports = (hour, minute) => {
 
     var today = new Date(Date.now());
+
     today = today.getDate() + "/" + (today.getMonth() + 1) + "/" + today.getFullYear();
 
-    schedule.scheduleJob({hour: hour, minute: minute}, () => {
+    var scheduleJob = schedule.scheduleJob({hour: hour, minute: minute}, () => {
         
         thingService.get((response) => {
             
@@ -38,5 +39,6 @@ module.exports = (hour, minute) => {
                 }
             });
         });
-});
+    });
+    return scheduleJob;
 }
