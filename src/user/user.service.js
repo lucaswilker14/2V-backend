@@ -96,6 +96,7 @@ exports.removeItemInReturned = async (userId, itemId, callback) => {
     await thingService.removeItem(itemId);
 };
 
+//criacao das opcoes de envio
 exports.createMailOptions = (to, receiver, loan_date, describeItem, ownerName) => {
 
     let mailOptions = {
@@ -121,6 +122,7 @@ exports.createMailOptions = (to, receiver, loan_date, describeItem, ownerName) =
 
 };
 
+//criando regra para mudar a hora do sistema
 exports.createRule = (hour, minute) => {
     var rule =  new schedule.RecurrenceRule();
     rule.hour = hour;
