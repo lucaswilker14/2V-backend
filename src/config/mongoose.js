@@ -12,11 +12,11 @@ module.exports = function () {
     });
 
     db.on("disconnected", function() {
-        console.log("desconectado");
+        console.log("Banco desconectado");
     });
 
     db.on("error", function(error) {
-        console.log('Erro na conexão: ' + error);
+        console.log('Erro na conexão com o banco: ' + error);
     });
 };
 
