@@ -57,7 +57,7 @@ exports.addItem = ('/add-item', async(req, res) => {
 });
 
 //o item foi devolvido (Devolucao - retornado)
-exports.returnedItem = ('/devolucao', async(req, res) => {
+exports.returnedItem = ('/returned', async(req, res) => {
     try {
         
         //busco o item pelo id
@@ -82,7 +82,7 @@ exports.returnedItem = ('/devolucao', async(req, res) => {
 });
 
 //item removido da lista de devolvidos e do bd
-exports.removeItem = ('/removeItem', async(req, res) => {
+exports.removeItem = ('/remove-item', async(req, res) => {
     try {
 
         await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
@@ -93,7 +93,7 @@ exports.removeItem = ('/removeItem', async(req, res) => {
     }
 });
 
-exports.solicitedItem = ('/solicitarItem', async(req, res) => {
+exports.solicitedItem = ('/request-item', async(req, res) => {
 
     await thingService.getItemById(req.params.itemId, async (response) => {
 
