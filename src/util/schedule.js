@@ -1,7 +1,6 @@
-var schedule = require('node-schedule');
+const schedule = require('node-schedule');
 const mongoose = require("mongoose");
 const thingService = require('../things/thing.service');
-const userService = require('../user/user.service');
 const emailService = require('../util/emailSender');
 
 const User = mongoose.model('User');
@@ -33,7 +32,7 @@ module.exports = (hour, minute) => {
                 var describeItem = element.name;
 
                 if (return_date === today) {
-                    var mailOptions = userService.createMailOptions(to, receiver, loan_date, describeItem, owner_name);
+                    var mailOptions = emailService.createMailOptions(to, receiver, loan_date, describeItem, owner_name);
                     emailService.send(mailOptions);
                     console.log('Emails enviados!');
                 }

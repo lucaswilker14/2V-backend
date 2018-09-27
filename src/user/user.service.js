@@ -2,7 +2,6 @@ var mongoose = require('mongoose');
 const response = require('../util/responses');
 const User = mongoose.model('User');
 const thingService = require('../things/thing.service');
-const schedule = require('node-schedule');
 
 
 //save
