@@ -5,6 +5,7 @@ const mongoose = require('../config/mongoose')();
 //carregar os modelos
 const user = require('../user/user.model');
 const thing = require('../things/thing.model');
+const admin = require('../admin/admin.model');
 
 //carregando rotas
 

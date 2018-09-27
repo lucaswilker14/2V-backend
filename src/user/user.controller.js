@@ -1,10 +1,8 @@
-const config = require('../config/config');
 const userService = require('../user/user.service');
 const thingService = require('../things/thing.service');
 const mongoose = require("mongoose");
 const emailService = require('../util/emailSender');
 const User = mongoose.model('User');
-const schedule = require('../util/schedule')(config.systemHour.hour, config.systemHour.minute);
 
 //salva usuario
 exports.post = ('/', async (req, res) => {
@@ -114,24 +112,6 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
         res.send('Email enviado!');
     });
 });
-
-
-//funcoes do admin
-
-//mudar o horario do envio de emails
-exports.setSystemDate = ('/change-date', (req, res) => {
-    var rule = userService.createRule(req.body.hour, req.body.minute);
-    console.log(rule);
-    var x = schedule.reschedule(rule);
-    if (x) res.status(200).send('Horário do envio de emails de devolução alterado para as: ' + req.body.hour + ":" + req.body.minute);
-    else res.status(200).send('error');
-});
-exports.getAllUser = ('/getUsers', async (req, res) => {
-    await userService.getFindAll((response) => {
-        res.send(response);
-    });
-});
-
 
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {
     var mailOptions = userService.createMailOptions(to, receiver, loan_date, describe_item, owner_name);
