@@ -1,0 +1,280 @@
+{
+    "swagger" : "2.0",
+    "info" : {
+      "description" : "A Web Development class project.",
+      "version" : "0.0.2",
+      "title" : "2V",
+      "license" : {
+        "name" : "MIT",
+        "url" : "https://opensource.org/licenses/MIT"
+      }
+    },
+  
+  
+    "host" : "localhost:3000",
+    "basePath" : "/api/2V",
+    "tags" : [ {
+      "name" : "User",
+      "description" : "API for users in the system"
+    } ],
+    "schemes" : [ "https", "http" ],
+    "consumes" : [ "application/json" ],
+    "produces" : [ "application/json" ],
+    "paths" : {
+      
+      "/user" : {
+        "post" : {
+          "tags" : [ "User" ],
+          "summary" : "Create new User in system",
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "user",
+            "description" : "User that we want to create",
+            "required" : false,
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          } ],
+          "responses" : {
+            "201" : {
+              "description" : "User Created Successfully!",
+              "schema" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+
+      "/user/{userId}" : {
+        "post" : {
+          "tags" : [ "User" ],
+          "summary" : "Create new Item in system and added to he user",
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "Thing",
+            "description" : "Thing that we want to create",
+            "required" : false,
+            "schema" : {
+              "$ref" : "#/definitions/Thing"
+            }
+          } ],
+          "responses" : {
+            "201" : {
+              "description" : "Item added to the User",
+              "schema" : {
+                "$ref" : "#/definitions/Thing"
+              }
+            }
+          }
+        },
+
+        "get" : {
+          "tags" : [ "User" ],
+          "summary" : "Get user in system by ID",
+          "parameters" : [ ],
+          "responses" : {
+            "200" : {
+              "description" : "Finded User by ID",
+              "schema" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+
+      "/user/{userId}/itens" : {
+        "get" : {
+          "tags" : [ "User" ],
+          "summary" : "Get itens borrewed in system by user ID",
+          "parameters" : [ ],
+          "responses" : {
+            "200" : {
+              "description" : "Finded Item by user ID",
+              "schema" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        }
+      },
+
+      "/user/{userId}/item/{itemId}" : {
+        "get" : {
+          "tags" : [ "User" ],
+          "summary" : "Request the item loaned by email",
+          "parameters" : [ ],
+          "responses" : {
+            "200" : {
+              "description" : "Send Email!"
+            }
+          }
+        },
+
+        "put" : {
+          "tags" : [ "User" ],
+          "summary" : "Updates the user with the item in the returned list",
+          "responses" : {
+            "200" : {
+              "description" : "item added to returned",
+              "schema" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          }
+        },
+
+        "delete" : {
+          "tags" : [ "User" ],
+          "summary" : "Delete Item with given item ID",
+          "parameters" : [ {
+            "name" : "userId",
+            "in" : "path",
+            "description" : "ID of user that we want to find",
+            "required" : true,
+            "type" : "string"
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Item is deleted"
+            }
+          }
+        }
+      },
+
+      "/auth" : {
+        "post" : {
+          "tags" : [ "Auth" ],
+          "summary" : "Attempt to log use in system",
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "user",
+            "description" : "User that we want to login with",
+            "required" : false,
+            "schema" : {
+              "$ref" : "#/definitions/Auth"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "User token generated",
+              "schema" : {
+                "$ref" : "#/definitions/Token"
+              }
+            },
+            "401" : {
+              "description" : "Invalid user e-mail or password"
+            }
+          }
+        }
+      }
+    },
+
+    "definitions" : {
+      "User" : {
+        "required" : [ "firstName", "secondName", "email", "username", "password", "phone" ],
+        "properties" : {
+          "firstName" : {
+            "type" : "string"
+          },
+          "secondName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          }
+        },
+
+        "example" : {
+          "firstName" : "User",
+          "secondName" : "Name",
+          "email" : "user@email.com",
+          "username": "user123",
+          "password" : "userPassword",
+          "phone" : "(99)99999-9999"
+        }
+      },
+
+      "Thing" : {
+        "required" : [ "name", "loan_date", "return_date", "name", "phone", "state", "city" ],
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "color" : {
+            "type" : "string"
+          },
+          "brand" : {
+            "type" : "string"
+          },
+          "image" : {
+            "type" : "string"
+          },
+          "loan_date" : {
+            "type" : "string"
+          },
+          "return_date" : {
+            "type" : "string"
+          },
+          "obs" : {
+            "type" : "string"
+          },
+          "owner" : {
+            "type" : "string"
+          },
+          "user_adress": {
+            "name" : {
+              "type" : "string"
+            },
+            "email" : {
+              "type" : "string"
+            },
+            "phone" : {
+              "type" : "string"
+            },
+            "street" : {
+              "type" : "string"
+            },
+            "number" : {
+              "type" : "string"
+            },
+            "neighborhood" : {
+              "type" : "string"
+            },
+            "cep" : {
+              "type" : "string"
+            },
+            "city" : {
+              "type" : "string"
+            }
+          }
+        },
+      
+        "example" : {
+        "name": "Caneta BIC",
+        "loan_date": "09/23/2018",
+        "return_date": "09/24/2018",
+        "user_adress": {
+          "name": "Lucas",
+          "email": "lwilker24@gmail.com",
+          "phone": "99887-5361",
+          "state": "PB",
+          "city": "Esperança"
+        }
+        }
+      }
+    }
+  }
