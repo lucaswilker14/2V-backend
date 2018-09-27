@@ -15,14 +15,6 @@ exports.post = async (user, callback) => {
     });
 }
 
-exports.getFindAll = async (callback) => {
-    await User.find({}).then((result) => {
-        callback(response.ok('Busca concluida', result));
-    }).catch((err) => {
-        callback(response.notFound(err));
-    });
-}
-
 //busca por id
 exports.getById = async (id, callback) => {
     await User.findById({_id: id}).then((result) => {
@@ -120,12 +112,4 @@ exports.createMailOptions = (to, receiver, loan_date, describeItem, ownerName) =
 
     return mailOptions;
 
-};
-
-//criando regra para mudar a hora do sistema
-exports.createRule = (hour, minute) => {
-    var rule =  new schedule.RecurrenceRule();
-    rule.hour = hour;
-    rule.minute = minute;
-    return rule;
 };
