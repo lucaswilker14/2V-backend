@@ -91,6 +91,7 @@ exports.removeItem = ('/remove-item', async(req, res) => {
     }
 });
 
+//solicitar o objeto emprestado - envio do email assim que acionado
 exports.solicitedItem = ('/request-item', async(req, res) => {
 
     await thingService.getItemById(req.params.itemId, async (response) => {
@@ -114,7 +115,7 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
 });
 
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {
-    var mailOptions = userService.createMailOptions(to, receiver, loan_date, describe_item, owner_name);
+    var mailOptions = emailService.createMailOptions(to, receiver, loan_date, describe_item, owner_name);
     return emailService.send(mailOptions);
 };
 

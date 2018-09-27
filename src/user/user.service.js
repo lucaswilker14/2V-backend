@@ -87,29 +87,3 @@ exports.removeItemInReturned = async (userId, itemId, callback) => {
     //remove item
     await thingService.removeItem(itemId);
 };
-
-//criacao das opcoes de envio
-exports.createMailOptions = (to, receiver, loan_date, describeItem, ownerName) => {
-
-    let mailOptions = {
-        from: "2VService@email.com",
-        subject: "Solicitação de Devolução"
-    }
-
-    //para quem enviar
-    mailOptions['to'] = to;
-    mailOptions['receiver'] = receiver;
-    mailOptions['loan_date'] = loan_date; 
-
-    //descricao do item
-    mailOptions['describeItem'] = describeItem;
-
-    mailOptions['solicitor'] = ownerName;
-
-    //corpo do email
-    mailOptions.text = "Caro, " + mailOptions.receiver  + "\n\n\n" + mailOptions.solicitor + " solicita o item emprestado de volta!" + "\n\n" 
-                        + "Descrição: " + "\n" + " - " + mailOptions.describeItem + " - Data de emprestimo: " + mailOptions.loan_date;
-
-    return mailOptions;
-
-};
