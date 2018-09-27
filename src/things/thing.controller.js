@@ -1,8 +1,10 @@
 const thingService = require('../things/thing.service');
 
 exports.post = ('/', async (req, res) => {
-    await thingService.post(req.body, (response) => {
-        res.status(200).send(response);
+    await thingService.post(req.body, null).then((result) => {
+        res.send(result);
+    }).catch((err) => {
+        
     });
 });
 

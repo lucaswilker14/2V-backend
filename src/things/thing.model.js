@@ -61,6 +61,7 @@ const Thing = new schema({
     },
 
     owner: {
+        default: null,
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
