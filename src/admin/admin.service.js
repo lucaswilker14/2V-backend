@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 const response = require('../util/responses');
+const Admin = mongoose.model('Admin');
 const User = mongoose.model('User');
 const schedule = require('node-schedule');
 

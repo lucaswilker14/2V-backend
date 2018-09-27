@@ -17,8 +17,7 @@ exports.post = ('/create', async (req, res) => {
 //mudar o horario do envio de emails
 exports.setSystemDate = ('/change', (req, res) => {
     var rule = adminService.createRule(req.body.hour, req.body.minute);
-    console.log(rule);
-    var x = schedule.reschedule(rule);
+    var x = schedule.reschedule(rule.rule);
     if (x) res.status(200).send(rule.message);
     else res.status(200).send('error');
 });

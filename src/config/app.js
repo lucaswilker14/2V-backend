@@ -19,7 +19,7 @@ app.use(express.urlencoded({extended: false}));
 //usando rotas
 const indexRoute = require('../routes/router')(app);
 
-app.get('/aaa', function (req, res, next) {
+app.use(function (req, res, next) {
     res.header('Content-Type', 'application/json');
     next();  // sem o next, a chamada para aqui
 });
