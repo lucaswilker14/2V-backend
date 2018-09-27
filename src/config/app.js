@@ -5,17 +5,19 @@ const mongoose = require('../config/mongoose')();
 //carregar os modelos
 const user = require('../user/user.model');
 const thing = require('../things/thing.model');
+const admin = require('../admin/admin.model');
 
 //carregando rotas
-const indexRoute = require('../routes/router');
 
 // app.use(morgan("dev"));
+// app.get('/api/2v', indexRoute);
 
+// app.use('/api/2V', indexRoute);
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 
 //usando rotas
-app.use('/api/2V', indexRoute);
+const indexRoute = require('../routes/router')(app);
 
 app.use(function (req, res, next) {
     res.header('Content-Type', 'application/json');
