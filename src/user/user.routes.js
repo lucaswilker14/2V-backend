@@ -4,20 +4,20 @@ const userController = require('./user.controller');
 const auth = require('./../util/auth-service');
 
 //rotas de usuarios
-router.post('/', auth.authorize, userController.post);
+router.post('/', userController.post);
 
-router.get('/:id', userController.getById);
+router.get('/:id', auth.authorize, userController.getById);
 
-router.get('/:userId/itens', userController.getItens);
+router.get('/:userId/itens', auth.authorize, userController.getItens);
 
-router.post('/:id', userController.addItem);
+router.post('/:id', auth.authorize, userController.addItem);
 
-router.put('/:userId/item/:itemId', userController.returnedItem);
+router.put('/:userId/item/:itemId', auth.authorize, userController.returnedItem);
 
-router.get('/:userId/item/:itemId', userController.solicitedItem); //quando clicar no botão C -FRONT
+router.get('/:userId/item/:itemId', auth.authorize, userController.solicitedItem); //quando clicar no botão C -FRONT
 
-router.delete('/:userId/item/:itemId', userController.removeItem);
+router.delete('/:userId/item/:itemId', auth.authorize, userController.removeItem);
 
-router.delete('/:userId', userController.removeUser);
+router.delete('/:userId', auth.authorize, userController.removeUser);
 
 module.exports = router;
