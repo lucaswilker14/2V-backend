@@ -2,7 +2,7 @@
     "swagger" : "2.0",
     "info" : {
       "description" : "A Web Development class project.",
-      "version" : "0.0.2",
+      "version" : "1.0.0",
       "title" : "2V",
       "license" : {
         "name" : "MIT",
@@ -24,14 +24,15 @@
       
       "/user" : {
         "post" : {
+          "type": "object",
           "tags" : [ "User" ],
           "summary" : "Create new User in system",
           "produces" : [ "application/json" ],
           "parameters" : [ {
             "in" : "body",
-            "name" : "user",
+            "name" : "User",
             "description" : "User that we want to create",
-            "required" : false,
+            "required" : true,
             "schema" : {
               "$ref" : "#/definitions/User"
             }
@@ -56,7 +57,7 @@
             "in" : "body",
             "name" : "Thing",
             "description" : "Thing that we want to create",
-            "required" : false,
+            "required" : true,
             "schema" : {
               "$ref" : "#/definitions/Thing"
             }
@@ -65,7 +66,7 @@
             "201" : {
               "description" : "Item added to the User",
               "schema" : {
-                "$ref" : "#/definitions/Thing"
+                "$ref" : "#/definitions/User"
               }
             }
           }
@@ -95,7 +96,7 @@
             "200" : {
               "description" : "Finded Item by user ID",
               "schema" : {
-                "$ref" : "#/definitions/User"
+                "$ref" : "#/definitions/Thing"
               }
             }
           }
@@ -119,7 +120,7 @@
           "summary" : "Updates the user with the item in the returned list",
           "responses" : {
             "200" : {
-              "description" : "item added to returned",
+              "description" : "item added to returned list",
               "schema" : {
                 "$ref" : "#/definitions/User"
               }
@@ -195,6 +196,14 @@
           },
           "phone" : {
             "type" : "string"
+          },
+          "borrewed" : {
+            "type" : "array",
+            "$ref" : "#/definitions/Thing"
+          },
+          "returned" : {
+            "type" : "array",
+            "$ref" : "#/definitions/Thing"
           }
         },
 
@@ -204,11 +213,14 @@
           "email" : "user@email.com",
           "username": "user123",
           "password" : "userPassword",
-          "phone" : "(99)99999-9999"
+          "phone" : "(99)99999-9999",
+          "borrewed" : "[]",
+          "returned" : "[]"
         }
       },
 
       "Thing" : {
+        "type": "object",
         "required" : [ "name", "loan_date", "return_date", "name", "phone", "state", "city" ],
         "properties" : {
           "name" : {
@@ -236,30 +248,11 @@
             "type" : "string"
           },
           "user_adress": {
-            "name" : {
-              "type" : "string"
-            },
-            "email" : {
-              "type" : "string"
-            },
-            "phone" : {
-              "type" : "string"
-            },
-            "street" : {
-              "type" : "string"
-            },
-            "number" : {
-              "type" : "string"
-            },
-            "neighborhood" : {
-              "type" : "string"
-            },
-            "cep" : {
-              "type" : "string"
-            },
-            "city" : {
-              "type" : "string"
-            }
+            "$ref" :"#/definitions/User_adress"
+          },
+          "owner" : {
+            "type" : "object",
+            "$ref" : "#/definitions/User"
           }
         },
       
@@ -267,14 +260,48 @@
         "name": "Caneta BIC",
         "loan_date": "09/23/2018",
         "return_date": "09/24/2018",
+        "owner": "null", 
         "user_adress": {
           "name": "Lucas",
           "email": "lwilker24@gmail.com",
           "phone": "99887-5361",
           "state": "PB",
           "city": "Esperança"
+          }
         }
-        }
+      },
+
+      "User_adress" : {
+        "required" : [ "name", "phone", "state", "city" ],
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          },
+          "street" : {
+            "type" : "string"
+          },
+          "number" : {
+            "type" : "string"
+          },
+          "neighborhood" : {
+            "type" : "string"
+          },
+          "cep" : {
+            "type" : "string"
+          },
+          "state" : {
+            "type" : "string"
+          },
+          "city" : {
+            "type" : "string"
+          }
       }
-    }
+      }
   }
+}
