@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const morgan = require('morgan');
 const mongoose = require('../config/mongoose')();
 
 //carregar os modelos
@@ -9,7 +10,7 @@ const admin = require('../admin/admin.model');
 
 //carregando rotas
 
-// app.use(morgan("dev"));
+app.use(morgan("dev"));
 // app.get('/api/2v', indexRoute);
 
 // app.use('/api/2V', indexRoute);
