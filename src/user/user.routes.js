@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 const userController = require('./user.controller');
+const auth = require('./../util/auth-service');
 
 //rotas de usuarios
-router.post('/', userController.post);
+router.post('/', auth.authorize, userController.post);
 
 router.get('/:id', userController.getById);
 
