@@ -32,11 +32,8 @@ exports.getItemByUser = async (userId, callback) => {
         .select('borrewed')
         .populate('borrewed');
     
-        if (borrewed.borrewed.length > 0) {
-            callback(response.ok('Busca concluida', borrewed.borrewed));
-        } else {
-            callback(response.notFound("Nenhum Item Encontrado!"));
-        }
+        if (borrewed.borrewed.length > 0) callback(response.ok('Busca concluida', borrewed.borrewed));
+        else callback(response.notFound("Nenhum Item Encontrado!"));
     } catch (error) {
         callback(response.notFound("Usuário não Existe!"));
     }
@@ -55,7 +52,7 @@ exports.addItemInBorrewed = async (userId, itemId, callback) => {
 
 //adicionando na lista do usuario um item que foi emprestado
 exports.addItemInReturned = async (userId, itemId, callback) => {
-    await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $push: {returned: [itemId] }})
+    await User.findByIdAndUpdate(userId, { $push: {returned: [itemId] }})
     .then((result) => {
         callback(response.ok('ADICIONADO AOS DEVOLVIDOS!', result));
     }).catch((err) => {
@@ -65,7 +62,7 @@ exports.addItemInReturned = async (userId, itemId, callback) => {
 
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
 exports.removeItemInBorrewed = async (userId, itemId, callback) => {
-    await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $pull: {borrewed: mongoose.Types.ObjectId(itemId) }})
+    await User.findByIdAndUpdate(userId, { $pull: {borrewed: itemId }})
     .then(() => {
         callback(response.ok("Item Removido da Lista de Emprestados!", ''));    
     }).catch((err) => {
@@ -76,11 +73,11 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
 
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
 exports.removeItemInReturned = async (userId, itemId, callback) => {
-    
-    await User.findByIdAndUpdate(mongoose.Types.ObjectId(userId), { $pull: {returned: mongoose.Types.ObjectId(itemId) }})
+    await User.findByIdAndUpdate({_id: userId}, { $pull: {returned: itemId }})
     .then((result) => {
         callback(response.ok("Item Removido da Lista de Devolvidos!", result));    
     }).catch((err) => {
+        console.log('ENTRA AQUI')
         callback(response.badRequest('Não foi possivel remover o item'));
     });
     //remove item

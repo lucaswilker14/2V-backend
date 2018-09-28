@@ -3,6 +3,8 @@ const thingService = require('../things/thing.service');
 const mongoose = require("mongoose");
 const emailService = require('../util/emailSender');
 const User = mongoose.model('User');
+const response = require('../util/responses');
+
 
 //salva usuario
 exports.post = ('/', async (req, res) => {
@@ -49,8 +51,7 @@ exports.addItem = ('/add-item', async(req, res) => {
         });
 
     } catch (error) {
-        console.log('DEU RUIM');
-        res.send(error.message);
+        res.send(response.notFound('Erro ao salvar! Usuário não Existe.'));
     }
 });
 
@@ -63,7 +64,7 @@ exports.returnedItem = ('/returned', async(req, res) => {
 
             // //remove dos emprestados (borrewed)
             await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
-                    console.log(response);
+                console.log(response);
             });
 
             //adicionar na lista de devolvidos (returned)
@@ -82,12 +83,11 @@ exports.returnedItem = ('/returned', async(req, res) => {
 //item removido da lista de devolvidos e do bd
 exports.removeItem = ('/remove-item', async(req, res) => {
     try {
-
         await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
             res.status(response.status).send(response);
         });
     } catch (error) {
-        res.send(error);
+        res.send('Usuário não encontrado!');
     }
 });
 
