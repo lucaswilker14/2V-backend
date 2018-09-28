@@ -17,4 +17,6 @@ router.get('/:userId/item/:itemId', userController.solicitedItem); //quando clic
 
 router.delete('/:userId/item/:itemId', userController.removeItem);
 
+router.delete('/:userId', userController.removeUser);
+
 module.exports = router;

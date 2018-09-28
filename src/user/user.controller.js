@@ -114,6 +114,12 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
     });
 });
 
+exports.removeUser = ('/remove-user', async (req, res) => {
+    userService.removeUser(req.params.userId, (response) => {
+        res.send(response);
+    });
+});
+
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {
     var mailOptions = emailService.createMailOptions(to, receiver, loan_date, describe_item, owner_name);
     return emailService.send(mailOptions);

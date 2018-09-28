@@ -86,3 +86,18 @@ exports.removeItemInReturned = async (userId, itemId, callback) => {
     //remove item
     await thingService.removeItem(itemId);
 };
+
+exports.removeUser = async (userId, callback) => {
+
+    User.findByIdAndRemove({_id: userId})
+    .then((result) => {
+        if (result) callback(response.ok('Sua conta foi excluida!', ''));    
+        else callback(response.internalError());
+    }).catch((err) => {
+        console.log(err);
+        callback(response.internalError());
+    });
+
+
+
+}
