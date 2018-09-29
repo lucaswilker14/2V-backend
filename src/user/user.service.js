@@ -17,7 +17,8 @@ exports.post = async (user, callback) => {
 //busca por id
 exports.getById = async (id, callback) => {
     await User.findById({_id: id}).then((result) => {
-        callback(response.ok('Busca concluída com Sucesso', result));
+        if (!result) callback(response.notFound('Usuário não existe!')); 
+        else callback(response.ok('Busca concluída com Sucesso', result));
     }).catch((err) => {
         callback(response.notFound('Usuário não existe!'));
     });;

@@ -26,7 +26,6 @@ exports.getItemById = async (id, callback) => {
     });
 }
 
-
 exports.removeItem = async (id, callback) => {
     var thing = await Thing.findById({_id: id});
     

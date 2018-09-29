@@ -4,10 +4,11 @@ const mongoose = require("mongoose");
 const emailService = require('../util/emailSender');
 const User = mongoose.model('User');
 const response = require('../util/responses');
-
+const auth = require('./../util/auth-service');
 
 //salva usuario
 exports.post = ('/', async (req, res) => {
+
     try {
         await userService.post(req.body, (response) => {
             res.status(response.status).send(response);
@@ -19,8 +20,15 @@ exports.post = ('/', async (req, res) => {
 
 //busca pelo id
 exports.getById = ('/', async (req, res) => {
+
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+
+    if(req.params.id != data.id) res.send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
+
     try {
-        await userService.getById(req.params.id, (response) => {
+        await userService.getById(data.id, (response) => {
             res.status(response.status).send(response);
         });
     } catch (error) {
@@ -29,9 +37,16 @@ exports.getById = ('/', async (req, res) => {
 });
 
 //busca os itens emprestado pelo usuarios
-exports.getItens = ('/itens', async (req, res) => {
+exports.getItems = ('/items', async (req, res) => {
+
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+    
+    if(req.params.userId != data.id) res.send(response.unauthorized('Acesso não autorizado! Ids diferentes!!!'));
+
     try {
-        await userService.getItemByUser(req.params.userId, (response) => {
+        await userService.getItemByUser(data.id, (response) => {
             res.status(response.status).send(response);
        }); 
     } catch (error) {
@@ -41,61 +56,96 @@ exports.getItens = ('/itens', async (req, res) => {
 
 //empresta um item
 exports.addItem = ('/add-item', async(req, res) => {
-    try {
-        //cria o item
-        var newThing = await thingService.post(req.body, req.params.id);
-        
-        //adiciona na lista de emprestados (returned)
-        userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
-            res.status(response.status).send(response);
-        });
 
-    } catch (error) {
-        res.send(response.notFound('Erro ao salvar! Usuário não Existe.'));
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+    
+    if(req.params.id != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
+   
+        try {
+            //cria o item
+            var newThing = await thingService.post(req.body, req.params.id);
+        
+            //adiciona na lista de emprestados (returned)
+            userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
+                res.status(response.status).send(response);
+            });
+
+        } catch (error) {
+            res.send(response.notFound('Erro ao salvar! Usuário não Existe.'));
+        }
     }
 });
 
 //o item foi devolvido (Devolucao - retornado)
 exports.returnedItem = ('/returned', async(req, res) => {
-    try {
+
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+    
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
+
+        try {
         
-        //busco o item pelo id
-        await thingService.getItemById(req.params.itemId, async (response) => {
-
-            // //remove dos emprestados (borrewed)
-            await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
-                console.log(response);
+            //busco o item pelo id
+            await thingService.getItemById(req.params.itemId, async (response) => {
+    
+                // //remove dos emprestados (borrewed)
+                await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
+                    console.log(response);
+                });
+    
+                //adicionar na lista de devolvidos (returned)
+                await userService.addItemInReturned(req.params.userId, response._id, (response) => {
+                        res.status(200).send(response)
+                });
+    
             });
-
-            //adicionar na lista de devolvidos (returned)
-            await userService.addItemInReturned(req.params.userId, response._id, (response) => {
-                    res.status(200).send(response)
-            });
-
-        });
-        
-    } catch (error) {
-        res.send("Objeto Não encontrado!");
-    }
-     
+            
+        } catch (error) {
+            res.send("Objeto Não encontrado!");
+        }
+    }     
 });
 
 //item removido da lista de devolvidos e do bd
 exports.removeItem = ('/remove-item', async(req, res) => {
-    try {
-        await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
-            res.status(response.status).send(response);
-        });
-    } catch (error) {
-        res.send('Usuário não encontrado!');
+
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+    
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
+        try {
+            await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
+                res.status(response.status).send(response);
+            });
+        } catch (error) {
+            res.send('Usuário não encontrado!');
+        }
     }
 });
 
 //solicitar o objeto emprestado - envio do email assim que acionado
 exports.solicitedItem = ('/request-item', async(req, res) => {
 
-    await thingService.getItemById(req.params.itemId, async (response) => {
-
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+    
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
+        await thingService.getItemById(req.params.itemId, async (response) => {
+        
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
         owner_name = owner_name.firstName + " " + owner_name.secondName;
@@ -111,13 +161,25 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
         await sendEmail(to, receiver, loan_date, describe_item, owner_name);
         
         res.send('Email enviado!');
-    });
+        });
+    }
 });
 
 exports.removeUser = ('/remove-user', async (req, res) => {
-    userService.removeUser(req.params.userId, (response) => {
-        res.send(response);
-    });
+    
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+    
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
+
+        userService.removeUser(req.params.userId, (response) => {
+            res.send(response);
+        });
+
+    }
 });
 
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {
