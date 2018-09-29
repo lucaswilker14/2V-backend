@@ -87,29 +87,31 @@ exports.returnedItem = ('/returned', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
 
-    try {
+        try {
         
-        //busco o item pelo id
-        await thingService.getItemById(req.params.itemId, async (response) => {
-
-            // //remove dos emprestados (borrewed)
-            await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
-                console.log(response);
+            //busco o item pelo id
+            await thingService.getItemById(req.params.itemId, async (response) => {
+    
+                // //remove dos emprestados (borrewed)
+                await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
+                    console.log(response);
+                });
+    
+                //adicionar na lista de devolvidos (returned)
+                await userService.addItemInReturned(req.params.userId, response._id, (response) => {
+                        res.status(200).send(response)
+                });
+    
             });
-
-            //adicionar na lista de devolvidos (returned)
-            await userService.addItemInReturned(req.params.userId, response._id, (response) => {
-                    res.status(200).send(response)
-            });
-
-        });
-        
-    } catch (error) {
-        res.send("Objeto Não encontrado!");
-    }
-     
+            
+        } catch (error) {
+            res.send("Objeto Não encontrado!");
+        }
+    }     
 });
 
 //item removido da lista de devolvidos e do bd
@@ -119,14 +121,16 @@ exports.removeItem = ('/remove-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) res.send(response.unauthorized('Acesso não autorizado!'));
-
-    try {
-        await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
-            res.status(response.status).send(response);
-        });
-    } catch (error) {
-        res.send('Usuário não encontrado!');
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
+        try {
+            await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
+                res.status(response.status).send(response);
+            });
+        } catch (error) {
+            res.send('Usuário não encontrado!');
+        }
     }
 });
 
@@ -167,11 +171,15 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.userId != data.id) {
+        res.send(response.unauthorized('Acesso não autorizado!'));
+    } else {
 
-    userService.removeUser(req.params.userId, (response) => {
-        res.send(response);
-    });
+        userService.removeUser(req.params.userId, (response) => {
+            res.send(response);
+        });
+
+    }
 });
 
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {
