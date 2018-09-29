@@ -53,6 +53,11 @@ const user = new schema({
         validate: [validatePhone, 'Telefone Inválido']
 
     },
+    
+    role: {
+        type: String,
+        default: 'user'
+    },
 
     borrewed: [{
         type: mongoose.Schema.Types.ObjectId,

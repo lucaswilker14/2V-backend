@@ -7,5 +7,5 @@ module.exports = (app) => {
     app.use('/api/2V/user', userRouter);
     app.use('/api/2V/thing', thingRouter);
     app.use('/api/2V/admin', adminRouter);
-    app.use('/api/2V/', loginRouter);
+    app.use('/api/2V/login', loginRouter);
 }

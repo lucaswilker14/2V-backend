@@ -52,7 +52,12 @@ const admin = new schema({
         trim: true,
         validate: [validatePhone, 'Telefone Inválido']
 
-    }
+    },
+    
+    role: {
+        type: String,
+        default: 'admin'
+    },
 });
 
 const Admin = mongoose.model('Admin', admin);

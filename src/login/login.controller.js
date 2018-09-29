@@ -5,17 +5,21 @@ const response = require('../util/responses');
 
 exports.authenticate = async (req, res, next) => {
     try {
+
         const user = await loginService.authenticate({
             username: req.body.username,
-            password: md5(req.body.password + global.SALT_KEY)
+            password: md5(req.body.password + global.SALT_KEY),
         });
+
+        console.log(user);
 
         if(!user) res.send(response.notFound('Username or Password Invalid!'));
 
         const token = await auth.generateToken({
             id: user._id,
             email: user.email,
-            username: user.username
+            username: user.username,
+            role: user.role
         });
 
         var result = {
