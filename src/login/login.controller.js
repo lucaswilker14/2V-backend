@@ -3,7 +3,7 @@ const md5 = require('md5');
 const auth = require('./../util/auth-service');
 const response = require('../util/responses');
 
-exports.post = async (req, res, next) => {
+exports.authenticate = async (req, res, next) => {
     try {
         const user = await loginService.authenticate({
             username: req.body.username,
@@ -22,8 +22,6 @@ exports.post = async (req, res, next) => {
             token:  token,
             username: user.username
         }
-
-
 
         res.send(response.ok('Usuario Logado!', result));
 
