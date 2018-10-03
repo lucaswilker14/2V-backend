@@ -91,6 +91,9 @@ exports.returnedItem = ('/returned', async(req, res) => {
         //busco o item pelo id
         await thingService.getItemById(req.params.itemId, async (response) => {
     
+
+            if(!response) return res.send('Item não existe!');
+
             // //remove dos emprestados (borrewed)
             await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
                 console.log(response);

@@ -64,8 +64,13 @@ exports.addItemInReturned = async (userId, itemId, callback) => {
 
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
 exports.removeItemInBorrewed = async (userId, itemId, callback) => {
+    
+    var item = await Thing.findById({_id: itemId});
+    if (!item) callback(response.badRequest('Não foi possivel remover o item'));
+    
     await User.findByIdAndUpdate(userId, { $pull: {borrewed: itemId }})
-    .then(() => {
+    .then((result) => {
+        console.log(result)
         callback(response.ok("Item Removido da Lista de Emprestados!", ''));    
     }).catch((err) => {
         callback(response.badRequest('Não foi possivel remover o item. Usuário não encontrado!'));
