@@ -25,7 +25,7 @@ exports.getById = ('/', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
 
-    if(req.params.id != data.id) res.send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
+    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
 
     try {
         await userService.getById(data.id, (response) => {
@@ -43,7 +43,7 @@ exports.getItems = ('/items', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) res.send(response.unauthorized('Acesso não autorizado! Ids diferentes!!!'));
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado! Ids diferentes!!!'));
 
     try {
         await userService.getItemByUser(data.id, (response) => {
@@ -61,22 +61,19 @@ exports.addItem = ('/add-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) {
-        res.send(response.unauthorized('Acesso não autorizado!'));
-    } else {
-   
-        try {
-            //cria o item
-            var newThing = await thingService.post(req.body, req.params.id);
+    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    
+    try {
+        //cria o item
+        var newThing = await thingService.post(req.body, req.params.id);
         
-            //adiciona na lista de emprestados (returned)
-            userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
-                res.status(response.status).send(response);
-            });
-
-        } catch (error) {
-            res.send(response.notFound('Erro ao salvar! Usuário não Existe.'));
-        }
+        //adiciona na lista de emprestados (returned)
+        userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
+            res.status(response.status).send(response);
+        });
+        
+    } catch (error) {
+        res.send(response.notFound('Erro ao salvar! Usuário não Existe.'));
     }
 });
 
@@ -87,31 +84,28 @@ exports.returnedItem = ('/returned', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) {
-        res.send(response.unauthorized('Acesso não autorizado!'));
-    } else {
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
 
-        try {
+    try {
         
-            //busco o item pelo id
-            await thingService.getItemById(req.params.itemId, async (response) => {
+        //busco o item pelo id
+        await thingService.getItemById(req.params.itemId, async (response) => {
     
-                // //remove dos emprestados (borrewed)
-                await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
-                    console.log(response);
-                });
-    
-                //adicionar na lista de devolvidos (returned)
-                await userService.addItemInReturned(req.params.userId, response._id, (response) => {
-                        res.status(200).send(response)
-                });
-    
+            // //remove dos emprestados (borrewed)
+            await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
+                console.log(response);
             });
+    
+        //  adicionar na lista de devolvidos (returned)
+            await userService.addItemInReturned(req.params.userId, response._id, (response) => {
+                res.status(200).send(response)
+            });
+    
+        });
             
-        } catch (error) {
-            res.send("Objeto Não encontrado!");
-        }
-    }     
+    } catch (error) {
+        res.send("Objeto Não encontrado!");
+    }
 });
 
 //item removido da lista de devolvidos e do bd
@@ -121,17 +115,16 @@ exports.removeItem = ('/remove-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) {
-        res.send(response.unauthorized('Acesso não autorizado!'));
-    } else {
-        try {
-            await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
-                res.status(response.status).send(response);
-            });
-        } catch (error) {
-            res.send('Usuário não encontrado!');
-        }
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    
+    try {
+        await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
+            res.status(response.status).send(response);
+        });
+    } catch (error) {
+        res.send('Usuário não encontrado!');
     }
+    
 });
 
 //solicitar o objeto emprestado - envio do email assim que acionado
@@ -141,10 +134,9 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) {
-        res.send(response.unauthorized('Acesso não autorizado!'));
-    } else {
-        await thingService.getItemById(req.params.itemId, async (response) => {
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+
+    await thingService.getItemById(req.params.itemId, async (response) => {
         
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
@@ -161,8 +153,7 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
         await sendEmail(to, receiver, loan_date, describe_item, owner_name);
         
         res.send('Email enviado!');
-        });
-    }
+    });
 });
 
 exports.removeUser = ('/remove-user', async (req, res) => {
@@ -171,15 +162,13 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) {
-        res.send(response.unauthorized('Acesso não autorizado!'));
-    } else {
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    
+    userService.removeUser(req.params.userId, (response) => {
+        res.send(response);
+    });
 
-        userService.removeUser(req.params.userId, (response) => {
-            res.send(response);
-        });
 
-    }
 });
 
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {

@@ -41,7 +41,7 @@ exports.isAdmin = function (req, res, next) {
                     message: 'Token Inválido'
                 });
             } else {
-                if (decoded.role === 'admin') {
+                if (decoded.role === 'Admin') {
                     next();
                 } else {
                     res.status(403).json({

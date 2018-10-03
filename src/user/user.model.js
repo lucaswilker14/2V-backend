@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 var md5 = require('md5');
 const schema = mongoose.Schema;
 
+const baseOptions = {
+    discriminatorKey: '_type',
+    collection: 'users'
+};
+
 const validateEmail = (email) => {
     var x = new RegExp("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
     return x.test(email);
@@ -53,11 +58,6 @@ const user = new schema({
         validate: [validatePhone, 'Telefone Inválido']
 
     },
-    
-    role: {
-        type: String,
-        default: 'user'
-    },
 
     borrewed: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -69,7 +69,7 @@ const user = new schema({
         ref: 'Thing'
     }]
 
-});
+}, baseOptions);
 
 const User = mongoose.model('User', user);
 

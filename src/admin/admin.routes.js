@@ -7,7 +7,8 @@ const auth = require('./../util/auth-service');
 // //rotas para admin
 
 router.post('/', auth.isAdmin, auth.authorize, adminController.post);
+router.post('/unique', adminController.post);
 router.put('/systemDate', auth.isAdmin, auth.authorize, adminController.setSystemDate);
-router.get('/', auth.authorize, auth.isAdmin, adminController.getAllUser);
+router.get('/', auth.isAdmin, auth.authorize, adminController.getAllUser);
 
 module.exports = router;

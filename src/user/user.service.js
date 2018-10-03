@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 const response = require('../util/responses');
 const User = mongoose.model('User');
+const Thing = mongoose.model('Thing');
 const thingService = require('../things/thing.service');
 
 
@@ -74,11 +75,14 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
 
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
 exports.removeItemInReturned = async (userId, itemId, callback) => {
+    
+    var item = await Thing.findById({_id: itemId});
+    if (!item) callback(response.badRequest('Não foi possivel remover o item'));
+    
     await User.findByIdAndUpdate({_id: userId}, { $pull: {returned: itemId }})
     .then((result) => {
         callback(response.ok("Item Removido da Lista de Devolvidos!", result));    
     }).catch((err) => {
-        console.log('ENTRA AQUI')
         callback(response.badRequest('Não foi possivel remover o item'));
     });
     //remove item

@@ -11,15 +11,14 @@ exports.authenticate = async (req, res, next) => {
             password: md5(req.body.password + global.SALT_KEY),
         });
 
-        console.log(user);
 
-        if(!user) res.send(response.notFound('Username or Password Invalid!'));
+        if(!user) return res.send(response.notFound('Username or Password Invalid!'));
 
         const token = await auth.generateToken({
             id: user._id,
             email: user.email,
             username: user.username,
-            role: user.role
+            role: user._type
         });
 
         var result = {
@@ -27,7 +26,7 @@ exports.authenticate = async (req, res, next) => {
             username: user.username
         }
 
-        res.send(response.ok('Usuario Logado!', result));
+        return res.send(response.ok('Usuario Logado!', result));
 
     } catch (error) {
         res.send(response.internalError());
