@@ -19,7 +19,7 @@ exports.get = async (callback) => {
 }
 
 exports.getItemById = async (id, callback) => {
-    Thing.findById({_id: mongoose.Types.ObjectId(id)}).then((result) => {
+    Thing.findById({_id: id}).then((result) => {
         callback(result);
     }).catch((err) => {
         callback(err.message);
