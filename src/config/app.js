@@ -8,12 +8,9 @@ const user = require('../user/user.model');
 const thing = require('../things/thing.model');
 const admin = require('../admin/admin.model');
 
-//carregando rotas
 
-// app.use(morgan("dev"));
-// app.get('/api/2v', indexRoute);
+app.use(morgan("dev"));
 
-// app.use('/api/2V', indexRoute);
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 

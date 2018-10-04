@@ -1,6 +1,4 @@
-// const bcrypt = require('bcrypt');
 global.SALT_KEY = '9a1b3589-0084-46c3-a211-bf863ceaa7a7' 
-// global.SALT_KEY = bcrypt.genSaltSync(10);
  
 var systemHour  = { 
     "hour": 00, 

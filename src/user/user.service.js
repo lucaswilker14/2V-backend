@@ -75,7 +75,6 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
     }).catch((err) => {
         callback(response.badRequest('Não foi possivel remover o item. Usuário não encontrado!'));
     });
-    // await thingService.removeItem(itemId);
 };
 
 //removendo da lista do usuario um item que foi emprestado, ou seja, foi devolvido. 
@@ -104,7 +103,4 @@ exports.removeUser = async (userId, callback) => {
         console.log(err);
         callback(response.internalError());
     });
-
-
-
 }
