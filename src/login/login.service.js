@@ -1,16 +1,17 @@
 const mongoose = require("mongoose");
 const User = mongoose.model('User');
-const Admin = mongoose.model('Admin');
-const response = require('../util/responses');
+const bcrypt = require('bcrypt');
+
 
 
 exports.authenticate = async (data) => {
 
-        const res = await User.findOne({
-            username: data.username,
-            password: data.password
-        });
-        return res;
+    const user = await User.findOne({
+        username: data.username
+    });
+
+    if(!user) return null
+    if(user.comparePassword(data.password)) return user;
 
 };
 

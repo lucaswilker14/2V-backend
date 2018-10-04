@@ -25,7 +25,7 @@ exports.createRule = (hour, minute) => {
 };
 
 exports.getFindAll = async (callback) => {
-    await User.find({}).then((result) => {
+    await User.find({_type: null}).then((result) => {
         callback(response.ok('Busca concluida', result));
     }).catch((err) => {
         callback(response.notFound(err));

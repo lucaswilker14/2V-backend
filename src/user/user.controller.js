@@ -141,6 +141,8 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
 
     await thingService.getItemById(req.params.itemId, async (response) => {
         
+        if(!response) return res.send('Item não existe!');
+
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
         owner_name = owner_name.firstName + " " + owner_name.secondName;
