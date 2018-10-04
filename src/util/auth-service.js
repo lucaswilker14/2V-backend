@@ -3,7 +3,7 @@ const response = require('../util/responses');
 
 
 exports.generateToken = async (data) => {
-    return jwt.sign(data, global.SALT_KEY, { expiresIn: '1d' });
+    return jwt.sign(data, global.SALT_KEY, { expiresIn: '1h' });
 }
 
 exports.decodeToken = async (token) => {
