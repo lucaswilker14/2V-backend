@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-var md5 = require('md5');
 const schema = mongoose.Schema;
+const bcrypt = require('bcrypt');
 
 const baseOptions = {
     discriminatorKey: '_type',
@@ -71,15 +71,19 @@ const user = new schema({
 
 }, baseOptions);
 
-const User = mongoose.model('User', user);
 
 user.pre('save', function(next) {
     // check if password is present and is modified.
     if ( this.password && this.isModified('password') ) {
-        this.password = md5(this.password + global.SALT_KEY);
+        this.password = bcrypt.hashSync(this.password, 10);
     }
     next();
 });
 
+user.methods.comparePassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+}
+
+const User = mongoose.model('User', user);
 
 module.exports = User;
