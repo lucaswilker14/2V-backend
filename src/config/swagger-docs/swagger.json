@@ -17,7 +17,7 @@
       "name" : "User",
       "description" : "API for users in the system"
     } ],
-    "schemes" : [ "https", "http" ],
+    "schemes" : [ "http" ],
     "consumes" : [ "application/json" ],
     "produces" : [ "application/json" ],
     "paths" : {
@@ -39,10 +39,10 @@
           } ],
           "responses" : {
             "201" : {
-              "description" : "User Created Successfully!",
-              "schema" : {
-                "$ref" : "#/definitions/User"
-              }
+              "description" : "Usuário Criado com Sucesso!"
+            },
+            "400" : {
+              "description" : "Usuario ja existe - Chave Duplicada"
             }
           }
         }
@@ -68,6 +68,10 @@
               "schema" : {
                 "$ref" : "#/definitions/User"
               }
+            },
+
+            "401": {
+              "description" : "Acesso Restrito!"
             }
           }
         },
@@ -146,10 +150,10 @@
         }
       },
 
-      "/auth" : {
+      "/login" : {
         "post" : {
-          "tags" : [ "Auth" ],
-          "summary" : "Attempt to log use in system",
+          "tags" : [ "Login" ],
+          "summary" : "Login use in system",
           "produces" : [ "application/json" ],
           "parameters" : [ {
             "in" : "body",
@@ -157,18 +161,15 @@
             "description" : "User that we want to login with",
             "required" : false,
             "schema" : {
-              "$ref" : "#/definitions/Auth"
+              "$ref" : "#/definitions/Login"
             }
           } ],
           "responses" : {
             "200" : {
-              "description" : "User token generated",
-              "schema" : {
-                "$ref" : "#/definitions/Token"
-              }
+              "description" : "Usuario Logado!"
             },
             "401" : {
-              "description" : "Invalid user e-mail or password"
+              "description" : "Username or Password Invalid!"
             }
           }
         }
@@ -196,24 +197,27 @@
           },
           "phone" : {
             "type" : "string"
-          },
-          "borrewed" : {
-            "type" : "array",
-            "$ref" : "#/definitions/Thing"
-          },
-          "returned" : {
-            "type" : "array",
-            "$ref" : "#/definitions/Thing"
           }
         },
 
         "example" : {
           "firstName" : "User",
           "secondName" : "Name",
-          "email" : "user@email.com",
+          "email" : "user@gmail.com",
           "username": "user123",
           "password" : "userPassword",
-          "phone" : "(99)99999-9999",
+          "phone" : "99999-9999"
+        }
+      },
+
+      "User - Created" : {
+        "example" : {
+          "firstName" : "User",
+          "secondName" : "Name",
+          "email" : "user@gmail.com",
+          "username": "user123",
+          "password" : "userPassword",
+          "phone" : "99999-9999",
           "borrewed" : "[]",
           "returned" : "[]"
         }
@@ -302,6 +306,23 @@
             "type" : "string"
           }
       }
+      },
+
+      "Login" : {
+        "required" : [ "username", "password" ],
+        "properties" : {
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          }
+        },
+
+        "example" : {
+          "username": "user123",
+          "password" : "userPassword"
+        }
       }
   }
 }
