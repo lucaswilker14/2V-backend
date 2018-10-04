@@ -5,6 +5,8 @@ const auth = require('./../util/auth-service');
 
 //rotas de usuarios
 router.post('/', userController.post);
+ 
+router.get('/:id', userController.getById); 
 
 router.get('/:id', auth.authorize, userController.getById);
 
