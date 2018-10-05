@@ -101,7 +101,7 @@ exports.returnedItem = ('/returned', async(req, res) => {
     
         //  adicionar na lista de devolvidos (returned)
             await userService.addItemInReturned(req.params.userId, response._id, (response) => {
-                res.send(response)
+                res.status(response.status).send(response)
             });
     
         });
@@ -141,7 +141,7 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
 
     await thingService.getItemById(req.params.itemId, async (result) => {
         
-        if(!result) return res.send(response.notFound('Item não existe!'));
+        if(!result) return res.status(result.status).send(response.notFound('Item não existe!'));
 
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
@@ -157,7 +157,7 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
         
         await sendEmail(to, receiver, loan_date, describe_item, owner_name);
         
-        res.send('Email enviado!');
+        res.status(result.status).send('Email enviado!');
     });
 });
 
