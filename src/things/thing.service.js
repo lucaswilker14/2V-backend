@@ -11,7 +11,7 @@ exports.post = async (thing, owner) => {
 }
 
 exports.get = async (callback) => {
-    Thing.find({}, 'user_adress name loan_date return_date owner').then((result) => {
+    await Thing.find({}, 'user_adress name loan_date return_date owner').then((result) => {
         callback(result);
     }).catch((err) => {
         callback(err);
@@ -19,7 +19,8 @@ exports.get = async (callback) => {
 }
 
 exports.getItemById = async (id, callback) => {
-    Thing.findById({_id: id}).then((result) => {
+    await Thing.findById({_id: id})
+    .then((result) => {
         callback(result);
     }).catch((err) => {
         callback(err.message);

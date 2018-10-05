@@ -12,7 +12,7 @@ exports.authenticate = async (req, res, next) => {
         });
 
 
-        if(!user) return res.send(response.notFound('Username or Password Invalid!'));
+        if(!user) return res.status(404).send(response.notFound('Username or Password Invalid!'));
 
         const token = await auth.generateToken({
             id: user._id,

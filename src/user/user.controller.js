@@ -25,7 +25,7 @@ exports.getById = ('/', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
 
-    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
+    if(req.params.userId != data.id) return res.status(401).send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
 
     try {
         await userService.getById(data.id, (response) => {
@@ -61,14 +61,14 @@ exports.addItem = ('/add-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
     
     try {
         //cria o item
-        var newThing = await thingService.post(req.body, req.params.id);
+        var newThing = await thingService.post(req.body, req.params.userId);
         
         //adiciona na lista de emprestados (returned)
-        userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
+        userService.addItemInBorrewed(req.params.userId, newThing._id, (response) => {
             res.status(response.status).send(response);
         });
         
@@ -89,19 +89,19 @@ exports.returnedItem = ('/returned', async(req, res) => {
     try {
         
         //busco o item pelo id
-        await thingService.getItemById(req.params.itemId, async (response) => {
+        await thingService.getItemById(req.params.itemId, async (result) => {
     
 
-            if(!response) return res.send('Item não existe!');
+            if(!result) return res.send(response.notFound('Item não existe!'));
 
             // //remove dos emprestados (borrewed)
-            await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
+            await userService.removeItemInBorrewed(req.params.userId, result._id, (response) => {
                 console.log(response);
             });
     
         //  adicionar na lista de devolvidos (returned)
-            await userService.addItemInReturned(req.params.userId, response._id, (response) => {
-                res.status(200).send(response)
+            await userService.addItemInReturned(req.params.userId, result._id, (response) => {
+                res.status(response.status).send(response)
             });
     
         });
@@ -139,21 +139,21 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
     
     if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
 
-    await thingService.getItemById(req.params.itemId, async (response) => {
+    await thingService.getItemById(req.params.itemId, async (result) => {
         
-        if(!response) return res.send('Item não existe!');
+        if(!result) return res.send(response.notFound('Item não existe!'));
 
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
         owner_name = owner_name.firstName + " " + owner_name.secondName;
         //para quem vai enviar
-        var to = response.user_adress.email;
+        var to = result.user_adress.email;
         //nome do recebedor do email
-        var receiver = response.user_adress.name;
+        var receiver = result.user_adress.name;
         //data de devolucao
-        var loan_date = response.loan_date.getDate() + "/" + response.loan_date.getMonth() + "/" + response.loan_date.getFullYear();
+        var loan_date = result.loan_date.getDate() + "/" + result.loan_date.getMonth() + "/" + result.loan_date.getFullYear();
         //descricao do item
-        var describe_item = response.name
+        var describe_item = result.name
         
         await sendEmail(to, receiver, loan_date, describe_item, owner_name);
         
@@ -170,7 +170,7 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
     
     userService.removeUser(req.params.userId, (response) => {
-        res.send(response);
+        res.status(response.status).send(response);
     });
 
 
