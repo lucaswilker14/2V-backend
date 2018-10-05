@@ -32,7 +32,7 @@ exports.createMailOptions = (to, receiver, loan_date, describeItem, ownerName) =
     mailOptions['solicitor'] = ownerName;
 
     //corpo do email
-    mailOptions.text = "Caro, " + mailOptions.receiver  + "\n\n\n" + mailOptions.solicitor + " solicita o item emprestado de volta!" + "\n\n" 
+    mailOptions.text = "Olá, " + mailOptions.receiver  + "\n\n\n" + mailOptions.solicitor + " solicita a devolução do item emprestado!" + "\n\n" 
                         + "Descrição: " + "\n" + " - " + mailOptions.describeItem + " - Data de emprestimo: " + mailOptions.loan_date;
 
     return mailOptions;
