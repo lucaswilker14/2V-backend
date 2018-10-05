@@ -182,6 +182,9 @@
             "401": {
               "description" : "Acesso não autorizado!"
             },
+            "409": {
+              "description" : "Token Inválido!"
+            },
             "500" : {
               "description" : "Internal Server Error"
             }
@@ -189,7 +192,7 @@
         }
       },
 
-      "/user/{userId}/itens" : {
+      "/user/{userId}/items" : {
         "get" : {
           "tags" : [ "User" ],
           "summary" : "Get itens borrewed in system by user ID",

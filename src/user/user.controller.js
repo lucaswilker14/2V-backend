@@ -25,7 +25,7 @@ exports.getById = ('/', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
 
-    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
+    if(req.params.userId != data.id) return res.status(401).send(response.unauthorized('Acesso não autorizado! Ids diferentes'));
 
     try {
         await userService.getById(data.id, (response) => {
@@ -61,14 +61,14 @@ exports.addItem = ('/add-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
     
     try {
         //cria o item
-        var newThing = await thingService.post(req.body, req.params.id);
+        var newThing = await thingService.post(req.body, req.params.userId);
         
         //adiciona na lista de emprestados (returned)
-        userService.addItemInBorrewed(req.params.id, newThing._id, (response) => {
+        userService.addItemInBorrewed(req.params.userId, newThing._id, (response) => {
             res.status(response.status).send(response);
         });
         
@@ -167,9 +167,9 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
     
-    userService.removeUser(req.params.id, (response) => {
+    userService.removeUser(req.params.userId, (response) => {
         res.send(response);
     });
 

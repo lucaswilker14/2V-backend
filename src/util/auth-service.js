@@ -19,7 +19,7 @@ exports.authorize = function (req, res, next) {
     } else {
         jwt.verify(token, global.SALT_KEY, function (error, decoded) {
             if (error) {
-                res.json(response.conflict('Token Inválido!'));
+                res.status(409).send(response.conflict('Token Inválido!'));
             } else {
                 next();
             }
