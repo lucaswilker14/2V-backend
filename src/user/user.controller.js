@@ -89,10 +89,10 @@ exports.returnedItem = ('/returned', async(req, res) => {
     try {
         
         //busco o item pelo id
-        await thingService.getItemById(req.params.itemId, async (response) => {
+        await thingService.getItemById(req.params.itemId, async (result) => {
     
 
-            if(!response) return res.send('Item não existe!');
+            if(!result) return res.send(response.notFound('Item não existe!'));
 
             // //remove dos emprestados (borrewed)
             await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
@@ -101,7 +101,7 @@ exports.returnedItem = ('/returned', async(req, res) => {
     
         //  adicionar na lista de devolvidos (returned)
             await userService.addItemInReturned(req.params.userId, response._id, (response) => {
-                res.status(200).send(response)
+                res.send(response)
             });
     
         });
@@ -139,9 +139,9 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
     
     if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
 
-    await thingService.getItemById(req.params.itemId, async (response) => {
+    await thingService.getItemById(req.params.itemId, async (result) => {
         
-        if(!response) return res.send('Item não existe!');
+        if(!result) return res.send(response.notFound('Item não existe!'));
 
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
@@ -167,9 +167,9 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.id != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
     
-    userService.removeUser(req.params.userId, (response) => {
+    userService.removeUser(req.params.id, (response) => {
         res.send(response);
     });
 

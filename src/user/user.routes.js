@@ -20,6 +20,6 @@ router.delete('/:userId/item/:itemId', auth.authorize, userController.removeItem
 
 router.get('/:userId/item/:itemId', auth.authorize, userController.solicitedItem); //quando clicar no botão C -FRONT
 
-router.delete('/:userId', auth.authorize, userController.removeUser);
+router.delete('/:id', auth.authorize, userController.removeUser);
 
 module.exports = router;

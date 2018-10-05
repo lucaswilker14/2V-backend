@@ -9,7 +9,7 @@ const thingService = require('../things/thing.service');
 exports.post = async (user, callback) => {
     var user = new User(user); //criando um usuario
     await user.save().then((result) => {
-        callback(response.created('Usuário Criado com Sucesso!', result));
+        callback(response.created('Usuário Criado com Sucesso!', result._id));
     }).catch((err) => {
         callback(response.badRequest(err.message));
     });
@@ -17,7 +17,7 @@ exports.post = async (user, callback) => {
 
 //busca por id
 exports.getById = async (id, callback) => {
-    await User.findById({_id: id}).then((result) => {
+    await User.findById({_id: id}, '-password').then((result) => {
         if (!result) callback(response.notFound('Usuário não existe!')); 
         else callback(response.ok('Busca concluída com Sucesso', result));
     }).catch((err) => {
@@ -56,7 +56,7 @@ exports.addItemInBorrewed = async (userId, itemId, callback) => {
 exports.addItemInReturned = async (userId, itemId, callback) => {
     await User.findByIdAndUpdate(userId, { $push: {returned: [itemId] }})
     .then((result) => {
-        callback(response.ok('ADICIONADO AOS DEVOLVIDOS!', result));
+        callback(response.ok('Adicionado aos Devolvidos!', result));
     }).catch((err) => {
         callback(response.badRequest('Não foi possível devolver o Item'));
     });

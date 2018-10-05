@@ -15,11 +15,11 @@ exports.authorize = function (req, res, next) {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     if (!token) {
-        res.send(response.unauthorized('Acesso Restrito!'));
+        res.status(401).send(response.unauthorized('Acesso Restrito!'));
     } else {
         jwt.verify(token, global.SALT_KEY, function (error, decoded) {
             if (error) {
-                res.json(response.unauthorized('Token Inválido!'));
+                res.json(response.conflict('Token Inválido!'));
             } else {
                 next();
             }
