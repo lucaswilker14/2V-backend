@@ -95,12 +95,12 @@ exports.returnedItem = ('/returned', async(req, res) => {
             if(!result) return res.send(response.notFound('Item não existe!'));
 
             // //remove dos emprestados (borrewed)
-            await userService.removeItemInBorrewed(req.params.userId, response._id, (response) => {
+            await userService.removeItemInBorrewed(req.params.userId, result._id, (response) => {
                 console.log(response);
             });
     
         //  adicionar na lista de devolvidos (returned)
-            await userService.addItemInReturned(req.params.userId, response._id, (response) => {
+            await userService.addItemInReturned(req.params.userId, result._id, (response) => {
                 res.status(response.status).send(response)
             });
     
@@ -141,23 +141,23 @@ exports.solicitedItem = ('/request-item', async(req, res) => {
 
     await thingService.getItemById(req.params.itemId, async (result) => {
         
-        if(!result) return res.status(result.status).send(response.notFound('Item não existe!'));
+        if(!result) return res.send(response.notFound('Item não existe!'));
 
         //nome do proprietario do item
         var owner_name = await User.findById(req.params.userId, 'firstName secondName');
         owner_name = owner_name.firstName + " " + owner_name.secondName;
         //para quem vai enviar
-        var to = response.user_adress.email;
+        var to = result.user_adress.email;
         //nome do recebedor do email
-        var receiver = response.user_adress.name;
+        var receiver = result.user_adress.name;
         //data de devolucao
-        var loan_date = response.loan_date.getDate() + "/" + response.loan_date.getMonth() + "/" + response.loan_date.getFullYear();
+        var loan_date = result.loan_date.getDate() + "/" + result.loan_date.getMonth() + "/" + result.loan_date.getFullYear();
         //descricao do item
-        var describe_item = response.name
+        var describe_item = result.name
         
         await sendEmail(to, receiver, loan_date, describe_item, owner_name);
         
-        res.status(result.status).send('Email enviado!');
+        res.send('Email enviado!');
     });
 });
 
