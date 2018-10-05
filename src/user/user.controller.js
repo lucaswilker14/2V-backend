@@ -170,7 +170,7 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
     
     userService.removeUser(req.params.userId, (response) => {
-        res.send(response);
+        res.status(response.status).send(response);
     });
 
 

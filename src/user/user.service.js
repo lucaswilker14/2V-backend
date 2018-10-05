@@ -46,7 +46,7 @@ exports.addItemInBorrewed = async (userId, itemId, callback) => {
     //encontra e atualiza
     await User.findByIdAndUpdate(userId, { $push: {borrewed: [itemId] }})
     .then((result) => {
-        callback(response.ok('Item Adicionado! (Lista de Emprestados)', result));
+        callback(response.created('Item Adicionado! (Lista de Emprestados)', result));
     }).catch((err) => {
         callback(response.badRequest('Não foi possível Adicionar Item'));
     });
