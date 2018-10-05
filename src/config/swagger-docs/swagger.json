@@ -14,14 +14,48 @@
     "host" : "localhost:3000",
     "basePath" : "/api/2V",
     "tags" : [ {
+      "name" : "Login",
+      "description" : "API to access the system"
+    },
+    {
       "name" : "User",
-      "description" : "API for users in the system"
-    } ],
+      "description" : "API for logged-in user"
+    },
+    {
+      "name" : "Admin",
+      "description" : "API for logged-in admin"
+    }
+   ],
     "schemes" : [ "http" ],
     "consumes" : [ "application/json" ],
     "produces" : [ "application/json" ],
     "paths" : {
       
+      "/login" : {
+        "post" : {
+          "tags" : [ "Login" ],
+          "summary" : "Login user in system",
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "user",
+            "description" : "User that we want to login with",
+            "required" : false,
+            "schema" : {
+              "$ref" : "#/definitions/Login"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Usuario Logado!"
+            },
+            "404" : {
+              "description" : "Username or Password Invalid!"
+            }
+          }
+        }
+      },
+
       "/user" : {
         "post" : {
           "type": "object",
@@ -39,6 +73,9 @@
           } ],
           "responses" : {
             "201" : {
+              "schema" : {
+                "$ref" : "#/definitions/User - Created"
+              },
               "description" : "Usuário Criado com Sucesso!"
             },
             "400" : {
@@ -61,17 +98,33 @@
             "schema" : {
               "$ref" : "#/definitions/Thing"
             }
-          } ],
+
+          }, 
+          {
+            "in" : "path",
+            "name" : "userId",
+            "description" : "User ID",
+            "required" : true
+          },
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }
+        ],
           "responses" : {
             "201" : {
-              "description" : "Item added to the User",
-              "schema" : {
-                "$ref" : "#/definitions/User"
-              }
+              "description" : "Item Adicionado! (Lista de Emprestados)"
             },
-
             "401": {
               "description" : "Acesso Restrito!"
+            },
+            "404": {
+              "description" : "Erro ao salvar! Usuário não Existe."
+            },
+            "409": {
+              "description" : "Token Inválido!"
             }
           }
         },
@@ -79,29 +132,95 @@
         "get" : {
           "tags" : [ "User" ],
           "summary" : "Get user in system by ID",
-          "parameters" : [ ],
+          "parameters" : [ {
+             "in" : "path",
+             "name" : "userId",
+             "description" : "User ID",
+             "required" : true
+           },
+           {
+             "in" : "header",
+             "name" : "x-access-token",
+             "description":"Token when logged in",
+             "required" : true
+           } ],
           "responses" : {
             "200" : {
-              "description" : "Finded User by ID",
-              "schema" : {
-                "$ref" : "#/definitions/User"
-              }
+              "description" : "Busca concluída com Sucesso"
+            },
+            "401": {
+              "description" : "Acesso não autorizado! Ids diferentes"
+            },
+            "404": {
+              "description" : "Usuario não existe!"
+            },
+            "409": {
+              "description" : "Token Inválido!"
+            }
+          }
+        },
+
+        "delete" : {
+          "tags" : [ "User" ],
+          "summary" : "Delete User with given item ID",
+          "parameters" : [ {
+            "in" : "path",
+            "name" : "userId",
+            "description" : "User ID",
+            "required" : true
+          },
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }],
+          "responses" : {
+            "200" : {
+              "description" : "Sua conta foi excluida!"
+            },
+            "401": {
+              "description" : "Acesso não autorizado!"
+            },
+            "409": {
+              "description" : "Token Inválido!"
+            },
+            "500" : {
+              "description" : "Internal Server Error"
             }
           }
         }
       },
 
-      "/user/{userId}/itens" : {
+      "/user/{userId}/items" : {
         "get" : {
           "tags" : [ "User" ],
           "summary" : "Get itens borrewed in system by user ID",
-          "parameters" : [ ],
+          "parameters" : [ {
+            "in" : "path",
+            "name" : "userId",
+            "description" : "User ID",
+            "required" : true
+          },
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }
+          ],
           "responses" : {
             "200" : {
-              "description" : "Finded Item by user ID",
+              "description" : "Busca concluida",
               "schema" : {
                 "$ref" : "#/definitions/Thing"
               }
+            },
+            "404": {
+              "description" : "Nenhum Item Encontrado!"
+            },
+            "409": {
+              "description" : "Token Inválido!"
             }
           }
         }
@@ -111,10 +230,34 @@
         "get" : {
           "tags" : [ "User" ],
           "summary" : "Request the item loaned by email",
-          "parameters" : [ ],
+          "parameters" : [
+            {
+              "in" : "path",
+              "name" : "userId",
+              "description" : "User ID",
+              "required" : true
+            },
+            {
+              "in" : "path",
+              "name" : "itemId",
+              "description" : "Item ID",
+              "required" : true
+            },
+            {
+              "in" : "header",
+              "name" : "x-access-token",
+              "description":"Token when logged in",
+              "required" : true
+            }],
           "responses" : {
             "200" : {
-              "description" : "Send Email!"
+              "description" : "Email enviado!"
+            },
+            "401": {
+              "description" : "Acesso não autorizado!"
+            },
+            "404": {
+              "description" : "Item não existe!"
             }
           }
         },
@@ -122,12 +265,36 @@
         "put" : {
           "tags" : [ "User" ],
           "summary" : "Updates the user with the item in the returned list",
+          "parameters" : [{
+            "in" : "path",
+            "name" : "userId",
+            "description" : "User ID",
+            "required" : true
+          },
+          {
+            "in" : "path",
+            "name" : "itemId",
+            "description" : "Item ID",
+            "required" : true
+          },
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }],
           "responses" : {
             "200" : {
-              "description" : "item added to returned list",
-              "schema" : {
-                "$ref" : "#/definitions/User"
-              }
+              "description" : "Adicionado aos Devolvidos!"
+            },
+            "400": {
+              "description" : "Não foi possível devolver o Item"
+            },
+            "401": {
+              "description" : "Acesso não autorizado!"
+            },
+            "404": {
+              "description" : "Item não existe!"
             }
           }
         },
@@ -136,40 +303,135 @@
           "tags" : [ "User" ],
           "summary" : "Delete Item with given item ID",
           "parameters" : [ {
-            "name" : "userId",
             "in" : "path",
-            "description" : "ID of user that we want to find",
-            "required" : true,
-            "type" : "string"
-          } ],
+            "name" : "userId",
+            "description" : "User ID",
+            "required" : true
+          },
+          {
+            "in" : "path",
+            "name" : "itemId",
+            "description" : "Item ID",
+            "required" : true
+          },
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }],
           "responses" : {
             "200" : {
-              "description" : "Item is deleted"
+              "description" : "Item Removido da Lista de Devolvidos!"
+            },
+            "400": {
+              "description" : "Não foi possivel remover o item!"
+            },
+            "401": {
+              "description" : "Acesso não autorizado!"
+            },
+            "404": {
+              "description" : "Item não existe!"
             }
           }
         }
       },
 
-      "/login" : {
+      "/admin" : {
+        "get" : {
+          "tags" : [ "Admin" ],
+          "summary" : "Get all users in system (Only allowed by admins)",
+          "parameters" : [{
+             "in" : "header",
+             "name" : "x-access-token",
+             "description":"Token when logged in",
+             "required" : true
+           } ],
+          "responses" : {
+            "200" : {
+              "description" : "Busca concluída!"
+            },
+            "400": {
+              "description" : "Error Not Found"
+            },
+            "403" : {
+              "description": "Esta funcionalidade é restrita para administradores"
+            },
+            "401": {
+              "description" : "Token Inválido!"
+            }
+          }
+        },
+
         "post" : {
-          "tags" : [ "Login" ],
-          "summary" : "Login use in system",
+          "type": "object",
+          "tags" : [ "Admin" ],
+          "summary" : "Create new Admin in system",
           "produces" : [ "application/json" ],
           "parameters" : [ {
             "in" : "body",
-            "name" : "user",
-            "description" : "User that we want to login with",
-            "required" : false,
+            "name" : "Admin",
+            "description" : "Admin that we want to create (Only allowed by admins)",
+            "required" : true,
             "schema" : {
-              "$ref" : "#/definitions/Login"
+              "$ref" : "#/definitions/Admin"
+            }
+          } ],
+          "responses" : {
+            "201" : {
+              "schema" : {
+                "$ref" : "#/definitions/Admin - Created"
+              },
+              "description" : "Admin Criado com Sucesso!"
+            },
+            "400" : {
+              "description" : "Error"
+            },
+
+            "401": {
+              "description" : "Token Inválido!"
+            },
+
+            "403" : {
+              "description": "Esta funcionalidade é restrita para administradores"
+            }
+          }
+        }
+      },
+
+      "/admin/systemDate" : {
+        "put" : {
+          "type": "object",
+          "tags" : [ "Admin" ],
+          "summary" : "Create new Admin in system",
+          "produces" : [ "application/json" ],
+          "parameters" : [ {
+            "in" : "body",
+            "name" : "Admin",
+            "description" : "Change the schedule for sending emails (Only allowed by admins)",
+            "required" : true,
+            "schema" : {
+              "$ref" : "#/definitions/Admin - Set System Date"
             }
           } ],
           "responses" : {
             "200" : {
-              "description" : "Usuario Logado!"
+              "schema" : {
+                "$ref" : "#/definitions/Admin - Created"
+              },
+              "description" : "Horário do envio de emails de devolução alterado para as: xx:xx h"
             },
-            "401" : {
-              "description" : "Username or Password Invalid!"
+
+            "400" : {
+              "description" : "Error"
+            }, 
+
+            "401": {
+              "description" : "Token Inválido!"
+            },
+
+            "403" : {
+              "description": "Esta funcionalidade é restrita para administradores"
             }
           }
         }
@@ -212,14 +474,9 @@
 
       "User - Created" : {
         "example" : {
-          "firstName" : "User",
-          "secondName" : "Name",
-          "email" : "user@gmail.com",
-          "username": "user123",
-          "password" : "userPassword",
-          "phone" : "99999-9999",
-          "borrewed" : "[]",
-          "returned" : "[]"
+          "status" : "201",
+          "data" : "id",
+          "message" : "Usuário Criado com Sucesso!"
         }
       },
 
@@ -263,12 +520,12 @@
         "example" : {
         "name": "Caneta BIC",
         "loan_date": "09/23/2018",
-        "return_date": "09/24/2018",
+        "return_date": "10/04/2018",
         "owner": "null", 
         "user_adress": {
-          "name": "Lucas",
-          "email": "lwilker24@gmail.com",
-          "phone": "99887-5361",
+          "name": "User",
+          "email": "user@gmail.com",
+          "phone": "99999-9999",
           "state": "PB",
           "city": "Esperança"
           }
@@ -322,6 +579,23 @@
         "example" : {
           "username": "user123",
           "password" : "userPassword"
+        }
+      },
+
+      "Admin - Set System Date" : {
+        "required" : [ "hour", "minute" ],
+        "properties" : {
+          "hour" : {
+            "type" : "string"
+          },
+          "minute" : {
+            "type" : "string"
+          }
+        },
+
+        "example" : {
+          "hour": "22",
+          "minute" : "00"
         }
       }
   }
