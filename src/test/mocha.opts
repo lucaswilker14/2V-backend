@@ -1,0 +1,2 @@
+--require test/unit/helpers.js
+--reporter spec
