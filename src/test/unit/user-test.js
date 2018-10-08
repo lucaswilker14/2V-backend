@@ -258,6 +258,18 @@ describe('API Admin Test', () => {
                 done();
             });
         });
+        
+        it('should not allow common users', (done) => {
+            request
+            .post('/api/2V/admin')
+            .set("Content-type", 'application/json')
+            .set("x-access-token", token_user)
+            .end(function(err, res) {
+                expect(403).to.be.equal(res.status)
+                expect('Esta funcionalidade é restrita para administradores').to.equal(res.body.message);
+                done();
+            });
+        });
 
         it('should not create a new admin', (done) => {
             request
@@ -287,7 +299,6 @@ describe('API Admin Test', () => {
                 done();
             });
         });
-
 
         it('should not allow common users', (done) => {
             request
