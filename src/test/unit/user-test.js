@@ -4,6 +4,7 @@ const Admin = mongoose.model('Admin');
 const auth = require('./../../util/auth-service');
 var token_user = "";
 
+
 describe('API User Test', () => {
 
     var user_with_id = {};
@@ -42,7 +43,7 @@ describe('API User Test', () => {
         });
         user_with_id.save();
         done();
-    })
+    });
     
     //gerar token antes de cada teste
     beforeEach((done) => {

@@ -1,6 +1,6 @@
 const supertest = require("supertest");
 const chai = require("chai");
-const app = require("./../../config/app");
+const app = require("../../config/app");
 
 
 global.request = supertest(app);
