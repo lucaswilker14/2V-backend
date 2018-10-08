@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = mongoose.model('User');
 const Admin = mongoose.model('Admin');
 const auth = require('./../../util/auth-service');
+var token_user = "";
 
 describe('API User Test', () => {
 
@@ -26,7 +27,7 @@ describe('API User Test', () => {
         "phone": "99999-0000"
     }
     
-    var token = "";
+    // var token = "";
 
     //criando um usuario com id para usar como token
     before((done) => {
@@ -52,7 +53,7 @@ describe('API User Test', () => {
             username: user_with_id.username,
             role: user_with_id._type
         }).then((res) =>{
-            token = res;
+            token_user = res;
         });
         done();
     });
@@ -97,7 +98,7 @@ describe('API User Test', () => {
             request
             .get('/api/2V/user/' + user_with_id._id)
             .set("Content-type", 'application/json')
-            .set("x-access-token", token)
+            .set("x-access-token", token_user)
             .end(function(err, res) {
                 expect(200).to.be.equal(res.body.status)
                 expect('Busca concluída com Sucesso').to.equal(res.body.message);
@@ -121,7 +122,7 @@ describe('API User Test', () => {
             request
             .get('/api/2V/user/' + user_ex._id)
             .set("Content-type", 'application/json')
-            .set("x-access-token", token)
+            .set("x-access-token", token_user)
             .end(function(err, res) {
                 expect(401).to.be.equal(res.body.status)
                 expect('Acesso não autorizado! Ids diferentes').to.equal(res.body.message);
@@ -137,7 +138,7 @@ describe('API User Test', () => {
             request
             .delete('/api/2V/user/' + user_with_id._id)
             .set("Content-type", 'application/json')
-            .set("x-access-token", token)
+            .set("x-access-token", token_user)
             .send(user_with_id)
             .end(function(err, res) {
                 expect(200).to.be.equal(res.body.status)
@@ -164,7 +165,7 @@ describe('API User Test', () => {
             request
             .get('/api/2V/user/' + user_ex._id)
             .set("Content-type", 'application/json')
-            .set("x-access-token", token)
+            .set("x-access-token", token_user)
             .end(function(err, res) {
                 expect(401).to.be.equal(res.body.status)
                 expect('Acesso não autorizado! Ids diferentes').to.equal(res.body.message);
@@ -200,7 +201,7 @@ describe('API Admin Test', () => {
         "phone": "99999-0202"
     }
 
-    var token = "";
+    var token_admin = "";
 
     var systemDate = {
         "hour" : 17,
@@ -230,7 +231,7 @@ describe('API Admin Test', () => {
             username: admin_with_id.username,
             role: admin_with_id._type
         }).then((res) =>{
-            token = res;
+            token_admin = res;
         });
         done();
     });
@@ -272,18 +273,42 @@ describe('API Admin Test', () => {
 
     });
 
-
     describe('Router Admin - PUT /admin/systemDate', () => {
         
         it('should update the system time for sending emails', (done) => {
             request
             .put('/api/2V/admin/systemDate')
             .set("Content-type", 'application/json')
-            .set("x-access-token", token)
+            .set("x-access-token", token_admin)
             .send(systemDate)
             .end(function(err, res) {
                 expect(200).to.be.equal(res.status);
                 expect(res.text).to.include('Horário do envio de emails de devolução alterado para as:');
+                done();
+            });
+        });
+
+
+        it('should not allow common users', (done) => {
+            request
+            .put('/api/2V/admin/systemDate')
+            .set("Content-type", 'application/json')
+            .set("x-access-token", token_user)
+            .end(function(err, res) {
+                expect(403).to.be.equal(res.status)
+                expect('Esta funcionalidade é restrita para administradores').to.equal(res.body.message);
+                done();
+            });
+        });
+
+        it('should throw token error', (done) => {
+            request
+            .put('/api/2V/admin/systemDate')
+            .set("Content-type", 'application/json')
+            .set("x-access-token", "token 11454897845154asasasc4xc564")
+            .end(function(err, res) {
+                expect(409).to.be.equal(res.status)
+                expect('Token Inválido!').to.equal(res.body.message);
                 done();
             });
         });
