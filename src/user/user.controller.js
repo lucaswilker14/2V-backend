@@ -118,7 +118,7 @@ exports.removeItem = ('/remove-item', async(req, res) => {
     var token = req.body.token || req.query.token || req.headers['x-access-token'];
     const data = await auth.decodeToken(token);
     
-    if(req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+    if(req.params.userId != data.id) return res.status(401).send(response.unauthorized('Acesso não autorizado!'));
     
     try {
         await userService.removeItemInReturned(req.params.userId, req.params.itemId, (response) => {
