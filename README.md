@@ -6,7 +6,7 @@
 
 ### Instalação
 
-Instale as dependencias e as dev dependencias:
+**Instale as dependencias e as dev dependencias:**
 
 ```sh
 $ npm install
