@@ -11,8 +11,8 @@
     },
   
   
-    "host" : "app-2v-backend.herokuapp.com",
-    "basePath" : "/api/2v",
+    "host" : "localhost:3000",
+    "basePath" : "/api/2V",
     "tags" : [ {
       "name" : "Login",
       "description" : "API to access the system"

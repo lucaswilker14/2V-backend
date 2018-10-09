@@ -3,10 +3,11 @@ const config = require('./config');
 
 module.exports = function () {
 
-    mongoose.connect(config.connectionDBHeroku);
+    //para rodar com o link do heroku
+    // mongoose.connect(config.connectionDBHeroku);
     
     //para rodar local
-    // mongoose.connect(config.connectionDB);
+    mongoose.connect(config.connectionDB);
     
     mongoose.Promise = global.Promise;
 
