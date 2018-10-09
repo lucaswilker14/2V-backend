@@ -33,6 +33,7 @@ exports.getItemByUser = async (userId, callback) => {
         let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId)})
         .select('borrewed')
         .populate('borrewed');
+
     
         if (borrewed.borrewed.length > 0) callback(response.ok('Busca concluida', borrewed.borrewed));
         else callback(response.notFound("Nenhum Item Encontrado!"));

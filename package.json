@@ -4,7 +4,9 @@
   "description": "**APP WEB** desenvolvido na disciplina **Projeto 3**",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./bin/server.js"
+    "start": "nodemon ./bin/server.js",
+    "test-unit": "mocha --opts ./src/test/unit/mocha.opts ./src/test/unit/*.js --timeout 5000",
+    "test-integration": "mocha --opts ./src/test/unit/mocha.opts ./src/test/integration/*.js --timeout 5000"
   },
   "repository": {
     "type": "git",
@@ -37,6 +39,9 @@
     "swagger-ui-express": "^4.0.1"
   },
   "devDependencies": {
-    "nodemon": "^1.18.4"
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
   }
 }
