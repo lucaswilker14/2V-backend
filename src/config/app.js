@@ -11,7 +11,7 @@ const admin = require('../admin/admin.model');
 
 //carregando rotas
 
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 // app.get('/api/2v', indexRoute);
 
 // app.use('/api/2V', indexRoute);
