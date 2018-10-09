@@ -2,7 +2,12 @@ let mongoose = require("mongoose");
 const config = require('./config');
 
 module.exports = function () {
-    mongoose.connect(config.connectionDB);
+
+    mongoose.connect(config.connectionDBHeroku);
+    
+    //para rodar local
+    // mongoose.connect(config.connectionDB);
+    
     mongoose.Promise = global.Promise;
 
     let db = mongoose.connection;
