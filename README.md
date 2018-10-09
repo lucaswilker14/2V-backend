@@ -6,8 +6,6 @@
 
 ### Instalação
 
-Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
-
 Instale as dependencias e as dev dependencias:
 
 ```sh
@@ -18,4 +16,17 @@ Inicie o servidor:
 
 ```sh
 $ npm start
+```
+Para rodar o ambiente de teste:
+
+*-Testes de Unidade* 
+
+```sh
+$ npm run test-unit
+```
+
+*-Testes de Integração* 
+
+```sh
+$ npm run test-integration
 ```
