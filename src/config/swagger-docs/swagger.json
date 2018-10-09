@@ -11,7 +11,7 @@
     },
   
   
-    "host" : "localhost:3000",
+    "host" : "app-2v-backend.herokuapp.com",
     "basePath" : "/api/2V",
     "tags" : [ {
       "name" : "Login",
@@ -26,7 +26,7 @@
       "description" : "API for logged-in admin"
     }
    ],
-    "schemes" : [ "http", "https" ],
+    "schemes" : [ "https", "http" ],
     "consumes" : [ "application/json" ],
     "produces" : [ "application/json" ],
     "paths" : {
