@@ -12,7 +12,7 @@ Instale as dependencias e as dev dependencias:
 $ npm install
 ```
 
-Inicie o servidor:
+Após a instalação das dependencias, inicie o servidor:
 
 ```sh
 $ npm start
