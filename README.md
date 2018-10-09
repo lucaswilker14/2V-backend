@@ -12,12 +12,14 @@ Instale as dependencias e as dev dependencias:
 $ npm install
 ```
 
-Após a instalação das dependencias, inicie o servidor:
+**Após a instalação das dependencias, inicie o servidor:**
 
 ```sh
 $ npm start
 ```
-Para rodar o ambiente de teste:
+
+
+**Para rodar o ambiente de teste:**
 
 *-Testes de Unidade* 
 
