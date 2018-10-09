@@ -475,7 +475,7 @@
       "User - Created" : {
         "example" : {
           "status" : "201",
-          "data" : "id",
+          "data" : "userId",
           "message" : "Usuário Criado com Sucesso!"
         }
       },
@@ -506,7 +506,7 @@
             "type" : "string"
           },
           "owner" : {
-            "type" : "string"
+            "type" : "object"
           },
           "user_adress": {
             "$ref" :"#/definitions/User_adress"
@@ -521,7 +521,7 @@
         "name": "Caneta BIC",
         "loan_date": "09/23/2018",
         "return_date": "10/04/2018",
-        "owner": "null", 
+        "owner": null, 
         "user_adress": {
           "name": "User",
           "email": "user@gmail.com",
@@ -586,10 +586,12 @@
         "required" : [ "hour", "minute" ],
         "properties" : {
           "hour" : {
-            "type" : "string"
+            "type" : "integer",
+            "format": "int64"
           },
           "minute" : {
-            "type" : "string"
+            "type" : "integer",
+            "format": "int64"
           }
         },
 
