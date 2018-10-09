@@ -12,7 +12,7 @@
   
   
     "host" : "localhost:3000",
-    "basePath" : "/api/2V",
+    "basePath" : "/",
     "tags" : [ {
       "name" : "Login",
       "description" : "API to access the system"
