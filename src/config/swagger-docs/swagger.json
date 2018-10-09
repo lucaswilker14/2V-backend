@@ -345,10 +345,7 @@
              "in" : "header",
              "name" : "x-access-token",
              "description":"Token when logged in",
-             "required" : true,
-             "schema" : {
-              "$ref" : "#/definitions/Admin"
-             }
+             "required" : true
            } ],
           "responses" : {
             "200" : {
