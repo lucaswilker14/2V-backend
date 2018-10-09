@@ -361,8 +361,10 @@
               "description" : "Token Inválido!"
             }
           }
-        },
+        }
+      },
 
+      "/admin/unique" : {
         "post" : {
           "type": "object",
           "tags" : [ "Admin" ],
