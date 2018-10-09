@@ -345,7 +345,10 @@
              "in" : "header",
              "name" : "x-access-token",
              "description":"Token when logged in",
-             "required" : true
+             "required" : true,
+             "schema" : {
+              "$ref" : "#/definitions/Admin"
+             }
            } ],
           "responses" : {
             "200" : {
@@ -582,6 +585,39 @@
         }
       },
 
+      "Admin" : {
+        "required" : [ "firstName", "secondName", "email", "username", "password", "phone" ],
+        "properties" : {
+          "firstName" : {
+            "type" : "string"
+          },
+          "secondName" : {
+            "type" : "string"
+          },
+          "email" : {
+            "type" : "string"
+          },
+          "username" : {
+            "type" : "string"
+          },
+          "password" : {
+            "type" : "string"
+          },
+          "phone" : {
+            "type" : "string"
+          }
+        },
+
+        "example" : {
+          "firstName" : "Admin",
+          "secondName" : "Name ",
+          "email" : "admin@gmail.com",
+          "username": "admin123",
+          "password" : "adminPassword",
+          "phone" : "99999-0105"
+        }
+      },
+
       "Admin - Set System Date" : {
         "required" : [ "hour", "minute" ],
         "properties" : {
@@ -596,8 +632,8 @@
         },
 
         "example" : {
-          "hour": "22",
-          "minute" : "00"
+          "hour": 22,
+          "minute" : 15
         }
       }
   }
