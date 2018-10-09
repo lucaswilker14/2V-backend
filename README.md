@@ -8,10 +8,14 @@
 
 Dillinger requires [Node.js](https://nodejs.org/) v4+ to run.
 
-Instale as dependencias e as dev dependencias e inicie o servidor.
+Instale as dependencias e as dev dependencias:
 
 ```sh
 $ npm install
-$ npm start
 ```
 
+Inicie o servidor:
+
+```sh
+$ npm start
+```
