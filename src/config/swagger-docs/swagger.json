@@ -361,24 +361,29 @@
               "description" : "Token Inválido!"
             }
           }
-        }
-      },
+        },
 
-      "/admin/unique" : {
         "post" : {
           "type": "object",
           "tags" : [ "Admin" ],
           "summary" : "Create new Admin in system",
           "produces" : [ "application/json" ],
-          "parameters" : [ {
+          "parameters" : [ 
+          {
             "in" : "body",
             "name" : "Admin",
-            "description" : "Admin that we want to create (Only allowed by admins)",
+            "description" : "Admin that we want to create (Only allowed by admins) - OBS: Admin created",
             "required" : true,
             "schema" : {
               "$ref" : "#/definitions/Admin"
             }
-          } ],
+          },
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }],
           "responses" : {
             "201" : {
               "schema" : {
