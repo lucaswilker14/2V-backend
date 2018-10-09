@@ -420,7 +420,14 @@
             "schema" : {
               "$ref" : "#/definitions/Admin - Set System Date"
             }
-          } ],
+          },,
+          {
+            "in" : "header",
+            "name" : "x-access-token",
+            "description":"Token when logged in",
+            "required" : true
+          }
+        ],
           "responses" : {
             "200" : {
               "schema" : {
