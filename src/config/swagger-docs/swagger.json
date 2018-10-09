@@ -11,7 +11,7 @@
     },
   
   
-    "host" : "app-2v-backend.herokuapp.com/#/",
+    "host" : "app-2v-backend.herokuapp.com",
     "basePath" : "/",
     "tags" : [ {
       "name" : "Login",
