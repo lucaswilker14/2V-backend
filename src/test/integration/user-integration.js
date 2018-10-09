@@ -3,13 +3,11 @@ const User = mongoose.model('User');
 const Thing = mongoose.model('Thing');
 const auth = require('./../../util/auth-service');
 
-describe('API User and Thing', () => {
+describe('API User and Thing - POST', () => {
 
     var token_user = "";
-    var token_user2 = "";
 
     var user = {};
-    var user2 = {};
 
     var item = {
         "name": "Caneta BIC",
@@ -36,18 +34,6 @@ describe('API User and Thing', () => {
             "phone": "99999-5500"
         });
         user.save();
-
-        user2 = new User({
-            "_id": new mongoose.mongo.ObjectId('14cb91bdc3499f14678934de'),
-            "firstName": "User2",
-            "secondName": "WITH ID",
-            "email": "userwid2@gmail.com",
-            "username": "userwid21234",
-            "password": "userwid21334",
-            "phone": "99999-5522"
-        });
-        user2.save();
-
         done();
     });
 
@@ -62,24 +48,12 @@ describe('API User and Thing', () => {
         }).then((res) =>{
             token_user = res;
         });
-
-        auth.generateToken({
-            id: user2._id,
-            email: user2.email,
-            username: user2.username,
-            role: user2._type
-        }).then((res) =>{
-            token_user2 = res;
-        });
-
         done();
     });
 
     // //excluindo o usuario do bd
     after((done) => {
         User.findOneAndRemove({username: user.username}).then((result) => {
-        });
-        User.findOneAndRemove({username: user2.username}).then((result) => {
         });
         Thing.findOneAndRemove({name: 'Caneta BIC'}).then((result) => {    
         });
@@ -128,26 +102,62 @@ describe('API User and Thing', () => {
         });
 
     });
+    
+});
 
-    describe('Router User and Thing - GET /user/userId/items', () => {
-        
-        it('should get user items by ID in system', (done) => {
-            request
-            .get('/api/2V/user/' + user._id + '/items')
-            .set("Content-type", 'application/json')
-            .set('x-access-token', token_user)
-            .end(function(err, res) {
-                expect(200).to.be.equal(res.body.status)
-                expect('Busca concluida').to.include(res.body.message);
-                done();
-            });
+describe('API User and Thing - GET', () => {
+    
+    var token_user2_ok = "";
+    
+    var user2_ok = {};
+
+
+    //criando um usuario com id para usar como token
+    before((done) => {
+
+        user2_ok = new User({
+            "_id": new mongoose.mongo.ObjectId('14cb91bdc3499f14678934de'),
+            "firstName": "User2",
+            "secondName": "WITH ID",
+            "email": "userwid2@gmail.com",
+            "username": "userwid21234",
+            "password": "userwid21334",
+            "phone": "99999-5522"
         });
+        user2_ok.save();
+        
+        done();
+    });
+    
+    //gerar token antes de cada teste
+    beforeEach((done) => {
+        
+        auth.generateToken({
+            id: user2_ok._id,
+            email: user2_ok.email,
+            username: user2_ok.username,
+            role: user2_ok._type
+        }).then((res) =>{
+            token_user2_ok = res;
+        });
+        
+        done();
+    });
+    
+    // //excluindo o usuario do bd
+    after((done) => {
+        User.findOneAndRemove({username: user2_ok.username}).then((result) => {
+        });
+        done();
+    });
 
+    describe('Router User and Thing - GET /user/userId/items', () => {      
+        
         it('should throw the error 404 - NOT FOUND', (done) => {
             request
-            .get('/api/2V/user/' + user2._id + '/items')
+            .get('/api/2V/user/' + user2_ok._id + '/items')
             .set("Content-type", 'application/json')
-            .set('x-access-token', token_user2)
+            .set('x-access-token', token_user2_ok)
             .end(function(err, res) {
                 expect(404).to.be.equal(res.body.status)
                 expect('Nenhum Item Encontrado!').to.include(res.body.message);
@@ -155,5 +165,5 @@ describe('API User and Thing', () => {
             });
         });
     });
-    
+
 });
