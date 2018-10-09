@@ -12,7 +12,7 @@
   
   
     "host" : "localhost:3000",
-    "basePath" : "/",
+    "basePath" : "/app-2v-backend.herokuapp.com",
     "tags" : [ {
       "name" : "Login",
       "description" : "API to access the system"
