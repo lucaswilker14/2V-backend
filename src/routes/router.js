@@ -11,6 +11,6 @@ module.exports = (app) => {
     app.use('/api/2V/admin', adminRouter);
     app.use('/api/2V/login', loginRouter);
 
-    app.use('/api-docs-swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 }
