@@ -11,8 +11,7 @@ exports.authenticate = async (req, res, next) => {
             password: req.body.password
         });
 
-
-        if(!user) return res.status(404).send(response.notFound('Username or Password Invalid!'));
+        if(!user) return res.send(response.notFound('Username or Password Invalid!'));
 
         const token = await auth.generateToken({
             id: user._id,
@@ -23,7 +22,8 @@ exports.authenticate = async (req, res, next) => {
 
         var result = {
             token:  token,
-            username: user.username
+            username: user.username,
+            name: user.firstName + " " + user.secondName
         }
 
         return res.send(response.ok('Usuario Logado!', result));
