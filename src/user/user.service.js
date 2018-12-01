@@ -3,9 +3,12 @@ const response = require('../util/responses');
 const User = mongoose.model('User');
 const Thing = mongoose.model('Thing');
 const thingService = require('../things/thing.service');
+const fs = require('fs');
+
 //save
-exports.post = async (user, callback) => {
-    var user = new User(user); //criando um usuario
+exports.post = async (userBody, callback) => {
+
+    var user = new User(userBody); //criando um usuario
     await user.save().then((result) => {
         callback(response.created('Usuário Criado com Sucesso!', result._id));
     }).catch((err) => {

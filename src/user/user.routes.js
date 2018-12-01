@@ -3,7 +3,7 @@ var router = express.Router();
 const userController = require('./user.controller');
 const auth = require('./../util/auth-service');
 const multer = require('multer');
-const upload = multer({dest:'/uploads/'}).single("userImage");
+const upload = multer({dest:'./public/uploads/'}).single("userImage");
 
 //rotas de usuarios
 router.post('/', upload, userController.post);

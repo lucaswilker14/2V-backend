@@ -59,6 +59,11 @@ const user = new schema({
 
     },
 
+    image: {
+        type: String,
+        default: 'Imagem não definida'
+    },
+
     borrewed: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Thing'

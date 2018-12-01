@@ -10,6 +10,7 @@ const user = require('../user/user.model');
 const thing = require('../things/thing.model');
 const admin = require('../admin/admin.model');
 
+app.use('/static', express.static(__dirname + '/public'));
 
 app.use(morgan("dev"));
 
