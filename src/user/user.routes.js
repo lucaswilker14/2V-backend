@@ -2,9 +2,11 @@ var express = require('express');
 var router = express.Router();
 const userController = require('./user.controller');
 const auth = require('./../util/auth-service');
+const multer = require('multer');
+const upload = multer({dest:'/uploads/'}).single("userImage");
 
 //rotas de usuarios
-router.post('/', userController.post);
+router.post('/', upload, userController.post);
 
 router.post('/:userId', auth.authorize, userController.addItem);
  
