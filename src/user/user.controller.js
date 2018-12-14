@@ -176,7 +176,7 @@ exports.solicitedItem = ('/request-item', async (req, res) => {
 
         await sendEmail(to, receiver, loan_date, describe_item, owner_name);
 
-        res.send('Email enviado!');
+        res.send('Email enviado para ' + result.user_adress.email);
     });
 });
 
