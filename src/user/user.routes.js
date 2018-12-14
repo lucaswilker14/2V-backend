@@ -16,6 +16,8 @@ router.delete('/:userId', auth.authorize, userController.removeUser);
 
 router.get('/:userId/items', auth.authorize, userController.getItems);
 
+router.get('/:userId/returnedItems', auth.authorize, userController.getReturnedItems);
+
 router.put('/:userId/item/:itemId', auth.authorize, userController.returnedItem);
 
 router.delete('/:userId/item/:itemId', auth.authorize, userController.removeItem);

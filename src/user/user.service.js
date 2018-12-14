@@ -6,9 +6,10 @@ const thingService = require('../things/thing.service');
 const fs = require('fs');
 
 //save
-exports.post = async (userBody, callback) => {
+exports.post = async (userBody, imageUser, callback) => {
 
     var user = new User(userBody); //criando um usuario
+    if(imageUser) user.image = imageUser.destination + imageUser.filename;
     await user.save().then((result) => {
         callback(response.created('Usuário Criado com Sucesso!', result._id));
     }).catch((err) => {
@@ -37,6 +38,21 @@ exports.getItemByUser = async (userId, callback) => {
 
     
         if (borrewed.borrewed.length > 0) callback(response.ok('Busca concluida', borrewed.borrewed));
+        else callback(response.notFound("Nenhum Item Encontrado!"));
+    } catch (error) {
+        callback(response.notFound("Usuário não Existe!"));
+    }
+};
+
+exports.getReturnedItems = async (userId, callback) => {
+
+    try {
+        let returned = await User.findById({_id: mongoose.Types.ObjectId(userId)})
+        .select('returned')
+        .populate('returned');
+
+    
+        if (returned.returned.length > 0) callback(response.ok('Busca concluida', returned.returned));
         else callback(response.notFound("Nenhum Item Encontrado!"));
     } catch (error) {
         callback(response.notFound("Usuário não Existe!"));

@@ -3,9 +3,9 @@ const Thing = mongoose.model('Thing');
 const response = require('../util/responses');
 
 exports.post = async (thing, owner) => {
-    var thing = new Thing(thing);
-    var res = await thing.save()
-    await Thing.findByIdAndUpdate(thing._id, { $set: {owner: owner}});
+    var new_thing = new Thing(thing);
+    var res = await new_thing.save()
+    await Thing.findByIdAndUpdate(new_thing._id, { $set: {owner: owner}});
     return res;
 
 }

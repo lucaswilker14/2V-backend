@@ -8,9 +8,9 @@ const auth = require('./../util/auth-service');
 
 //salva usuario
 exports.post = ('/', (req, res) => {
-    
+
     try {
-        userService.post(req.body, (response) => {
+        userService.post(req.body, req.file, (response) => {
             res.status(response.status).send(response);
         });
     } catch (error) {
@@ -55,6 +55,25 @@ exports.getItems = ('/items', async (req, res) => {
     }
 });
 
+//retorna os item devolvidos
+exports.getReturnedItems = ('/returnedItems', async (req, res) => {
+
+    //dessa forma eu recupero os dados do usuario logado!!
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+
+    if (req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado! Ids diferentes!!!'));
+
+    try {
+        await userService.getReturnedItems(data.id, (response) => {
+            res.status(response.status).send(response);
+        });
+    } catch (error) {
+        res.status(response.status);
+    }
+});
+
+
 //empresta um item
 exports.addItem = ('/add-item', async (req, res) => {
 
@@ -67,7 +86,6 @@ exports.addItem = ('/add-item', async (req, res) => {
     try {
         //cria o item
         var newThing = await thingService.post(req.body, req.params.userId);
-
         //adiciona na lista de emprestados (returned)
         userService.addItemInBorrewed(req.params.userId, newThing._id, (response) => {
             res.status(response.status).send(response);
