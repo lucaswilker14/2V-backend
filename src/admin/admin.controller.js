@@ -19,7 +19,7 @@ exports.setSystemDate = ('/change', (req, res) => {
     var rule = adminService.createRule(req.body.hour, req.body.minute);
     var x = schedule.reschedule(rule.rule);
     if (x) res.status(200).send(rule.message);
-    else res.status(200).send('error');
+    else res.status(500).send('error');
 });
 
 //buscar todos os usuarios!
