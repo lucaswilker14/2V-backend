@@ -9,7 +9,7 @@ const fs = require('fs');
 exports.post = async (userBody, imageUser, callback) => {
 
     var user = new User(userBody); //criando um usuario
-    if(imageUser) user.image = imageUser.destination + imageUser.filename;
+    // if(imageUser) user.image = imageUser.destination + imageUser.filename;
     await user.save().then((result) => {
         callback(response.created('Usuário Criado com Sucesso!', result._id));
     }).catch((err) => {

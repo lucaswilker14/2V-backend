@@ -10,14 +10,13 @@ const auth = require('./../util/auth-service');
 exports.post = ('/', (req, res) => {
 
     try {
-        userService.post(req.body, req.file, (response) => {
+        userService.post(req.body, (response) => {
             res.status(response.status).send(response);
         });
     } catch (error) {
         res.send(error);
     }
 });
-
 
 //busca pelo id
 exports.getById = ('/', async (req, res) => {
