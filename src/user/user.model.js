@@ -48,7 +48,9 @@ const user = new schema({
     password: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        minlength: 8,
+        maxlength: 20
     },
 
     phone: {
