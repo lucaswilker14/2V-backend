@@ -32,13 +32,16 @@ exports.getById = async (id, callback) => {
 exports.getItemByUser = async (userId, callback) => {
 
     try {
-        let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId)})
+        let borrewed = await User.findById({_id: mongoose.Types.ObjectId(userId), new: true})
         .select('borrewed')
         .populate('borrewed');
 
-    
-        if (borrewed.borrewed.length > 0) callback(response.ok('Busca concluida', borrewed.borrewed));
-        else callback(response.notFound("Nenhum Item Encontrado!"));
+        if (borrewed.borrewed.length !== 0) {
+            return callback(response.ok('Busca concluida', borrewed.borrewed));
+        }
+        else {
+            return callback(response.notFound("Nenhum Item Encontrado!"));
+        }
     } catch (error) {
         callback(response.notFound("Usuário não Existe!"));
     }
@@ -72,7 +75,7 @@ exports.addItemInBorrewed = async (userId, itemId, callback) => {
 
 //adicionando na lista do usuario um item que foi emprestado
 exports.addItemInReturned = async (userId, itemId, callback) => {
-    await User.findByIdAndUpdate(userId, { $push: {returned: [itemId] }})
+    await User.findByIdAndUpdate(userId, { $push: {returned: [itemId] }, new: true})
     .then((result) => {
         callback(response.ok('Adicionado aos Devolvidos!', result));
     }).catch((err) => {
@@ -86,9 +89,8 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
     var item = await Thing.findById({_id: itemId});
     if (!item) callback(response.badRequest('Não foi possivel remover o item'));
     
-    await User.findByIdAndUpdate(userId, { $pull: {borrewed: itemId }})
+    await User.findByIdAndUpdate(userId, { $pull: {borrewed: itemId }, new: true })
     .then((result) => {
-        console.log(result)
         callback(response.ok("Item Removido da Lista de Emprestados!", ''));    
     }).catch((err) => {
         callback(response.badRequest('Não foi possivel remover o item. Usuário não encontrado!'));
@@ -99,9 +101,9 @@ exports.removeItemInBorrewed = async (userId, itemId, callback) => {
 exports.removeItemInReturned = async (userId, itemId, callback) => {
     
     var item = await Thing.findById({_id: itemId});
-    if (!item) callback(response.badRequest('Não foi possivel remover o item'));
+    if (!item) return callback(response.badRequest('Não foi possivel remover o item'));
     
-    await User.findByIdAndUpdate({_id: userId}, { $pull: {returned: itemId }})
+    await User.findByIdAndUpdate({_id: userId}, { $pull: {returned: itemId }, new: true})
     .then((result) => {
         callback(response.ok("Item Removido da Lista de Devolvidos!", result));    
     }).catch((err) => {
@@ -122,3 +124,14 @@ exports.removeUser = async (userId, callback) => {
         callback(response.internalError());
     });
 }
+
+exports.recoveryPasswordUser = async (userId, new_password, callback) => {
+    await User.findByIdAndUpdate({_id: userId}, { $set: { password: new_password}})
+    .then((result) => {
+        if (result) callback(response.ok('Senha Alterada Com sucesso', ''));    
+        else callback(response.internalError());
+    }).catch((err) => {
+        console.log(err);
+        callback(response.internalError());
+    });
+};

@@ -21,9 +21,9 @@ exports.get = async (callback) => {
 exports.getItemById = async (id, callback) => {
     await Thing.findById({_id: id})
     .then((result) => {
-        callback(result);
+        return callback(result);
     }).catch((err) => {
-        callback(err.message);
+        return callback(err.message);
     });
 }
 

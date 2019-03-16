@@ -72,7 +72,6 @@ exports.getReturnedItems = ('/returnedItems', async (req, res) => {
     }
 });
 
-
 //empresta um item
 exports.addItem = ('/add-item', async (req, res) => {
 
@@ -114,7 +113,8 @@ exports.returnedItem = ('/returned', async (req, res) => {
 
             // //remove dos emprestados (borrewed)
             await userService.removeItemInBorrewed(req.params.userId, result._id, (response) => {
-                console.log(response);
+                // console.log(response);
+
             });
 
             //  adicionar na lista de devolvidos (returned)
@@ -192,6 +192,18 @@ exports.removeUser = ('/remove-user', async (req, res) => {
     });
 
 
+});
+
+exports.recoveryPassword = ('/recoveryPassword', async (req, res) => {
+
+    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    const data = await auth.decodeToken(token);
+
+    if (req.params.userId != data.id) return res.send(response.unauthorized('Acesso não autorizado!'));
+
+    userService.recoveryPasswordUser(req.params.userId, req.body.password, (response) => {
+        res.status(response.status).send(response);
+    });
 });
 
 const sendEmail = (to, receiver, loan_date, describe_item, owner_name) => {

@@ -24,5 +24,6 @@ router.delete('/:userId/item/:itemId', auth.authorize, userController.removeItem
 
 router.get('/:userId/item/:itemId', auth.authorize, userController.solicitedItem); //quando clicar no botão C -FRONT
 
+router.put('/:userId/recovery-password', auth.authorize, userController.recoveryPassword);
 
 module.exports = router;
