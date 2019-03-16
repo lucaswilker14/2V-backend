@@ -4,7 +4,7 @@
   "description": "**APP WEB** desenvolvido na disciplina **Projeto 3**",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon ./bin/server.js",
+    "start": "node ./bin/server.js",
     "test-unit": "mocha --opts ./src/test/unit/mocha.opts ./src/test/unit/*.js --timeout 5000",
     "test-integration": "mocha --opts ./src/test/unit/mocha.opts ./src/test/integration/*.js --timeout 5000"
   },
